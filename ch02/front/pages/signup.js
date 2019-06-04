@@ -1,7 +1,5 @@
-import React, { useState } from 'react';
-import Head from 'next/head';
+import React, { useState, useCallback } from 'react';
 import { Form, Input, Checkbox, Button } from 'antd';
-import AppLayout from '../components/AppLayout';
 
 const Signup = () => {
 
@@ -13,9 +11,9 @@ const Signup = () => {
   // 커스텀 훅
   const useInput = (initValue = null) => {
     const [value, setter] = useState(initValue);
-    const handler = (e) => { 
+    const handler = useCallback((e) => { 
       setter(e.target.value);
-    }
+    }, []);
     return [value, handler];
   }
 
@@ -23,7 +21,7 @@ const Signup = () => {
   const [nick, onChangeNick] = useInput('');
   const [password, onChangePassword] = useInput('');
 
-  const onSubmit = (e) => {
+  const onSubmit = useCallback((e) => {
     e.preventDefault();
 
     if(password !== passwordCheck) {
@@ -33,28 +31,20 @@ const Signup = () => {
     if(!term) {
       return setTermError(true);
     }
+  }, [password, passwordCheck, term]);
 
-    console.log({ id, nick, password, passwordCheck, term });
-  };
-
-  const onChangePasswordCheck = (e) => {
+  const onChangePasswordCheck = useCallback((e) => {
     setPasswordError(e.target.value !== password);
     setPasswordCheck(e.target.value);
-  };
+  }, [password]);
 
-  const onChangeTerm = (e) => {
+  const onChangeTerm = useCallback((e) => {
     setTermError(false);
     setTerm(e.target.checked);
-  };
+  }, []);
 
   return (
-  <>
-    <Head>
-      <title>NodeBird</title>
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/antd/3.19.0/antd.css" />
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/antd/3.19.0/antd.js" />
-    </Head>
-    <AppLayout>
+    <>
       <Form onSubmit={onSubmit} style={{ padding: 10 }}>
         <div>
           <label htmlFor="user-id">아이디</label>
@@ -91,8 +81,7 @@ const Signup = () => {
         </div>
 
       </Form>
-    </AppLayout>
-  </>
+    </>
   )
 }
 
