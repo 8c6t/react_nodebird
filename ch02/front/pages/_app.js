@@ -1,6 +1,7 @@
 import React from 'react';
 import Head from 'next/head';
 import AppLayout from '../components/AppLayout';
+import PropTypes from 'prop-types';
 
 // Component: next에서 넣는 props(index, profile, signup 등)
 const NodeBird = ({ Component }) => {
@@ -16,6 +17,10 @@ const NodeBird = ({ Component }) => {
       </AppLayout>
     </>
   );
+}
+
+NodeBird.propTypes = {
+  Component: PropTypes.elementType
 }
 
 export default NodeBird;
