@@ -2,7 +2,8 @@ import React from 'react';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import LoginForm from './LoginForm';
-import { Menu, Input, Button, Row, Col, Card, Avatar, Form } from 'antd';
+import UserProfile from './UserProfile';
+import { Menu, Input,  Row, Col } from 'antd';
 
 const dummy = {
   nickname: 'Hachicore',
@@ -29,28 +30,15 @@ const AppLayout = ({ children }) => {
       <Row gutter={8}>
         <Col xs={24} md={6}>
           {dummy.isLoggedIn
-            ?
-            <Card
-              actions={[
-                <div key="twit">트윗<br />{dummy.Post.length}</div>,
-                <div key="following">팔로잉<br />{dummy.Following.length}</div>,
-                <div key="follower">팔로워<br />{dummy.Followers.length}</div>,
-              ]}
-            >
-              <Card.Meta
-                avatar={ <Avatar>{ dummy.nickname[0] }</Avatar> }
-                title={ dummy.nickname }
-              />
-            </Card>
-            : 
-            <LoginForm />
+            ? <UserProfile />
+            : <LoginForm />
           }
         </Col>
         <Col xs={24} md={12}>
           {children}
         </Col>
         <Col xs={24} md={6}>
-
+          <Link href="https://github.com/8c6t"><a target="_blank">GitHub</a></Link>
         </Col>
       </Row>
     </div>
