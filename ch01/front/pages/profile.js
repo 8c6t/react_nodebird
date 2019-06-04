@@ -1,9 +1,8 @@
-import React from 'react';
-import Link from 'next/link';
+import React from "react";
 import Head from 'next/head';
-import AppLayout from '../components/AppLayout';
+import AppLayout from "../components/AppLayout";
 
-const Home = () => {
+const Profile = () => {
   return (
     <>
       <Head>
@@ -12,11 +11,10 @@ const Home = () => {
         <script src="https://cdnjs.cloudflare.com/ajax/libs/antd/3.19.0/antd.js" />
       </Head>
       <AppLayout>
-        {/* props로 전달 가능(children) */}
-        <div>Hello, Next!</div>
+        <div>프로필</div>
       </AppLayout>
     </>
-  )
+  );
 };
 
-export default Home;
+export default Profile;
