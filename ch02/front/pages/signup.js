@@ -1,5 +1,11 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, memo } from 'react';
 import { Form, Input, Checkbox, Button } from 'antd';
+
+const TextInput = memo( ({ value, onChange }) => {
+  return (
+    <Input value={value} required onChange={onChange}/>
+  );
+});
 
 const Signup = () => {
 
@@ -49,19 +55,19 @@ const Signup = () => {
         <div>
           <label htmlFor="user-id">아이디</label>
           <br />
-          <Input name="user-id" value={id} required onChange={onChangeId}/>
+          <TextInput name="user-id" value={id} onChange={onChangeId} />
         </div>
 
         <div>
           <label htmlFor="user-nick">닉네임</label>
           <br />
-          <Input name="user-nick" value={nick} required onChange={onChangeNick}/>
+          <TextInput name="user-nick" value={nick} required onChange={onChangeNick}/>
         </div>
 
         <div>
           <label htmlFor="user-password">비밀번호</label>
           <br />
-          <Input name="user-password" type="password" value={password} required onChange={onChangePassword}/>
+          <TextInput name="user-password" type="password" value={password} required onChange={onChangePassword}/>
         </div>
 
         <div>
