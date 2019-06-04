@@ -26,7 +26,7 @@ const AppLayout = ({ children }) => {
           <Input.Search style={{ verticalAlign: 'middle' }} enterButton />
         </Menu.Item>
       </Menu>
-      <Row>
+      <Row gutter={8}>
         <Col xs={24} md={6}>
           {dummy.isLoggedIn
             ?

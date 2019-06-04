@@ -15,7 +15,7 @@ const LoginForm = () => {
   }, [id, password]);
 
   return (
-    <Form onSubmit={onSubmitForm}>
+    <Form style={ { padding: '1rem' } } onSubmit={onSubmitForm}>
       <div>
         <label htmlFor="user-id">아이디</label>
         <br />

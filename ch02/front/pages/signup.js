@@ -46,7 +46,7 @@ const Signup = () => {
 
   return (
     <>
-      <Form onSubmit={onSubmit} style={{ padding: 10 }}>
+      <Form onSubmit={onSubmit} style={{ padding: '1rem' }}>
         <div>
           <label htmlFor="user-id">아이디</label>
           <br />
@@ -77,7 +77,7 @@ const Signup = () => {
           {termError && <div style={{ color: 'red' }}>약관에 동의하셔야 합니다</div>}
         </div>
 
-        <div style={{ marginTop: 10 }}>
+        <div style={{ marginTop: '1rem' }}>
           <Button type="primary" htmlType="submit">가입하기</Button>
         </div>
 
