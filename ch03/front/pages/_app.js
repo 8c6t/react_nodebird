@@ -3,7 +3,7 @@ import Head from 'next/head';
 import AppLayout from '../components/AppLayout';
 import PropTypes from 'prop-types';
 
-import { createStore } from 'redux';
+import { createStore, compose, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import withRedux from 'next-redux-wrapper';
 
@@ -33,7 +33,17 @@ NodeBird.propTypes = {
 
 // 
 export default withRedux((initialState, options) => {
-  const store = createStore(reducer, initialState);
-  // store 커스터마이징시...
+  const middlewares = [];
+
+  // compose: 미들웨어 여럿을 합성
+  // applyMiddleware: 해당 미들웨어들을 적용
+  const enhancer = compose(
+    applyMiddleware(...middlewares),
+    // 적용한 미들웨어에 devtools 적용
+    !options.isServer && window.__REDUX_DEVTOOLS_EXTENSION__ !== 'undefined' ? window.__REDUX_DEVTOOLS_EXTENSION__() : (f) => f,
+  );
+
+  const store = createStore(reducer, initialState, enhancer);
+
   return store;
 })(NodeBird);
