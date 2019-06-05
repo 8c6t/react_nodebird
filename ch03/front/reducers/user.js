@@ -1,4 +1,4 @@
-const initialState = {
+export const initialState = {
   isLoggedIn: false,
   user: {},
 };
@@ -32,7 +32,6 @@ const reducer = (state = initialState, action) => {
         user: null
       }
   }
-
 }
 
 export default reducer;
