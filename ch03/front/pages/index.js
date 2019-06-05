@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import PostForm from '../components/PostForm';
 import PostCard from '../components/PostCard';
-import { useDispatch, useSelector } from 'react-redux';
+import { connect } from 'react-redux';
 
 import * as userActions from '../reducers/user';
 
@@ -18,17 +18,12 @@ const dummy = {
   }],
 }
 
-const Home = () => {
+const Home = ({ user, login, logout }) => {
 
-  const dispatch = useDispatch();
-  const { isLoggedIn, user } = useSelector(state => state.user);
-  console.log(user);
-
-  // Hooks를 이용한 redux dispatch
   useEffect(() => {
-    dispatch(userActions.loginAction);
-    dispatch(userActions.logoutAction);
-    dispatch(userActions.loginAction);
+    login(),
+    logout(),
+    login()
   }, []);
 
   return (
@@ -44,4 +39,16 @@ const Home = () => {
   )
 };
 
-export default Home;
+const mapStateToProps = (state) => ({
+  // root store -> user store
+  user: state.user.user
+})
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    login: () => dispatch(userActions.loginAction),
+    logout: () => dispatch(userActions.logoutAction)
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);
