@@ -8,6 +8,8 @@ import { Provider } from 'react-redux';
 import withRedux from 'next-redux-wrapper';
 
 import reducer from '../reducers';
+import sagaMiddlware from '../sagas/middleware';
+import rootSaga from '../sagas';
 
 // Component: next에서 넣는 props(index, profile, signup 등)
 // next에서는 next-redux-wrapper 패키지 설치 필요. props로 받음
@@ -32,17 +34,19 @@ NodeBird.propTypes = {
 }
 
 export default withRedux((initialState, options) => {
-  const middlewares = [];
+  const middlewares = [sagaMiddlware];
 
   // compose: 미들웨어 여럿을 합성
   // applyMiddleware: 해당 미들웨어들을 적용
-  const enhancer = compose(
-    applyMiddleware(...middlewares),
+  const enhancer = process.env.NODE_ENV === 'production'
     // 적용한 미들웨어에 devtools 적용
-    !options.isServer && window.__REDUX_DEVTOOLS_EXTENSION__ !== 'undefined' ? window.__REDUX_DEVTOOLS_EXTENSION__() : (f) => f,
-  );
+    ? compose(applyMiddleware(...middlewares),)
+    : compose(
+      applyMiddleware(...middlewares),
+      !options.isServer && window.__REDUX_DEVTOOLS_EXTENSION__ !== 'undefined' ? window.__REDUX_DEVTOOLS_EXTENSION__() : (f) => f,
+    );
 
   const store = createStore(reducer, initialState, enhancer);
-
+  sagaMiddlware.run(rootSaga);
   return store;
 })(NodeBird);
