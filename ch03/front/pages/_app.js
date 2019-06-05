@@ -31,7 +31,6 @@ NodeBird.propTypes = {
   store: PropTypes.object
 }
 
-// 
 export default withRedux((initialState, options) => {
   const middlewares = [];
 
