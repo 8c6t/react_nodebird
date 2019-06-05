@@ -1,5 +1,13 @@
 export const initialState = {
-  mainPosts: [],
+  mainPosts: [{
+    User: {
+      id: 1,
+      nickname: 'hachicore',
+    },
+    content: '첫번째 게시글',
+    img: 'http://img.hani.co.kr/imgdb/resize/2018/0313/00500561_20180313.JPG'
+  }],
+  imagePaths: [],
 };
 
 export const ADD_POST = 'ADD_POST';
