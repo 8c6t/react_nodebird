@@ -1,4 +1,4 @@
-import { all, fork, call, put, take, takeLatest, delay } from 'redux-saga/effects';
+import { all, fork, call, put, take, takeEvery, takeLatest, delay } from 'redux-saga/effects';
 import { LOG_IN, LOG_IN_SUCCESS, LOG_IN_FAILURE } from '../reducers/user';
 
 const HELLO_SAGA = "HELLO_SAGA";
@@ -55,11 +55,36 @@ function* watchSignUp() {
   }
 } */
 
+function* watchHello() {
+  // takeEvery를 사용하면 while(true)를 사용하지 않아도 된다
+/*   yield takeEvery(HELLO_SAGA, function*() {
+    yield put({ type: 'BYE_SAGA' })
+  }); */
+
+  // 여러 번 호출된 경우 마지막 호출에 대해서만 유효
+  // 이전 요청이 끝나지 않은게 있다면 이전 요청을 취소함
+  yield takeLatest(HELLO_SAGA, function*() {
+    yield delay(1000);
+    yield put({ type: 'BYE_SAGA' })
+  });
+}
+
+/* function* watchHello() {
+  while(true) {
+    yield take(HELLO_SAGA);
+    console.log(1);
+    console.log(2);
+    console.log(3);
+    console.log(4);
+  }
+} */
+
 // 사가 미들웨어에서 제너레이터의 next를 알아서 호출
 export default function* userSaga() {
   yield all([
     // watchSaga(),
     watchLogin(),
-    watchSignUp()
+    watchHello(),
+    //watchSignUp()
   ]);
 }
