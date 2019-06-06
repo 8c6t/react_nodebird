@@ -9,29 +9,20 @@ function loginAPI() {
 
 function* login() {
   try {
+    // call: 동기 호출
+    // fork: 비동기 호출
     yield call(loginAPI);
     // put은 dispatch와 동일
-    yield put({
-      type: LOG_IN_SUCCESS
-    });
+    yield put({ type: LOG_IN_SUCCESS });
   } catch (error) {
     console.error(error);
-    yield put({
-      type: LOG_IN_FAILURE
-    });
+    yield put({ type: LOG_IN_FAILURE });
   }
 }
 
 // 액션 실행 여부 대기
 function* watchLogin() {
-  while(true) {
-    yield take(LOG_IN);
-    yield delay(2000);
-    // put: saga의 dispatch
-    yield put({
-      type: LOG_IN_SUCCESS
-    });
-  }
+  yield takeEvery(LOG_IN, login)
 }
 
 function* watchSignUp() {
@@ -55,6 +46,11 @@ function* watchSignUp() {
   }
 } */
 
+function* hello() {
+  yield delay(1000);
+  yield put({ type: 'BYE_SAGA' })
+}
+
 function* watchHello() {
   // takeEvery를 사용하면 while(true)를 사용하지 않아도 된다
 /*   yield takeEvery(HELLO_SAGA, function*() {
@@ -63,10 +59,7 @@ function* watchHello() {
 
   // 여러 번 호출된 경우 마지막 호출에 대해서만 유효
   // 이전 요청이 끝나지 않은게 있다면 이전 요청을 취소함
-  yield takeLatest(HELLO_SAGA, function*() {
-    yield delay(1000);
-    yield put({ type: 'BYE_SAGA' })
-  });
+  yield takeLatest(HELLO_SAGA, hello);
 }
 
 /* function* watchHello() {
@@ -81,10 +74,10 @@ function* watchHello() {
 
 // 사가 미들웨어에서 제너레이터의 next를 알아서 호출
 export default function* userSaga() {
+  // 이벤트 리스너 간에는 순서가 상관 없듯
+  // 가급적 fork를 붙여준다
   yield all([
-    // watchSaga(),
-    watchLogin(),
-    watchHello(),
-    //watchSignUp()
+    fork(watchLogin),
+    fork(watchHello),
   ]);
 }
