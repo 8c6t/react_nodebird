@@ -1,5 +1,5 @@
 import { all, fork, call, put, take, takeEvery, takeLatest, delay } from 'redux-saga/effects';
-import { LOG_IN_REQUEST, LOG_IN_SUCCESS, LOG_IN_FAILURE } from '../reducers/user';
+import * as userActions from '../reducers/user';
 
 const HELLO_SAGA = 'HELLO_SAGA';
 
@@ -13,20 +13,35 @@ function* login() {
     // fork: 비동기 호출
     yield call(loginAPI);
     // put은 dispatch와 동일
-    yield put({ type: LOG_IN_SUCCESS });
+    yield put({ type: userActions.LOG_IN_SUCCESS });
   } catch (error) {
     console.error(error);
-    yield put({ type: LOG_IN_FAILURE });
+    yield put({ type: userActions.LOG_IN_FAILURE });
   }
 }
 
 // 액션 실행 여부 대기
 function* watchLogin() {
-  yield takeEvery(LOG_IN_REQUEST, login);
+  yield takeEvery(userActions.LOG_IN_REQUEST, login);
 }
 
-function* watchSignUp() {
+function signUpAPI() {
+  // 서버에 요청을 보냄
+}
 
+function* signUp() {
+  try {
+    yield call(signUpAPI);
+    yield put({ type: userActions.SIGN_UP_SUCCESS });
+  } catch (error) {
+    console.error(error);
+    yield put({ type: userActions.SIGN_UP_FAILURE });
+  }
+}
+
+
+function* watchSignUp() {
+  yield takeEvery(userActions.SIGN_UP_REQUEST, signUp);
 }
 
 /* function* watchSaga() {
@@ -79,5 +94,6 @@ export default function* userSaga() {
   yield all([
     fork(watchLogin),
     fork(watchHello),
+    fork(watchSignUp),
   ]);
 }
