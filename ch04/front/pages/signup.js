@@ -1,7 +1,8 @@
 import React, { useState, useCallback } from 'react';
 import { Form, Input, Checkbox, Button } from 'antd';
 import { useDispatch } from 'react-redux';
-import { signUpAction } from '../reducers/user';
+
+import * as userActions from '../reducers/user';
 
 // 커스텀 훅
 export const useInput = (initValue = null) => {
@@ -35,9 +36,10 @@ const Signup = () => {
       return setTermError(true);
     }
 
-    dispatch(signUpAction({
-      id, password, nick,
-    }));
+    dispatch({
+      type: userActions.SIGN_UP_REQUEST,
+      data: { id, password, nick },
+    });
   }, [password, passwordCheck, term]);
 
   const onChangePasswordCheck = useCallback((e) => {
