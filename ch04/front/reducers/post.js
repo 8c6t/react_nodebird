@@ -5,7 +5,7 @@ export const initialState = {
       nickname: 'hachicore',
     },
     content: '첫번째 게시글',
-    img: 'http://img.hani.co.kr/imgdb/resize/2018/0313/00500561_20180313.JPG'
+    img: 'http://img.hani.co.kr/imgdb/resize/2018/0313/00500561_20180313.JPG',
   }],
   imagePaths: [],
 };
@@ -15,7 +15,7 @@ export const ADD_DUMMY = 'ADD_DUMMY';
 
 const addPost = {
   type: ADD_POST,
-}
+};
 
 const addDummy = {
   type: ADD_DUMMY,
@@ -23,27 +23,27 @@ const addDummy = {
     content: 'Hello',
     UserId: 1,
     User: {
-      nickname: 'hachicore'
-    }
-  }
-}
+      nickname: 'hachicore',
+    },
+  },
+};
 
 const reducer = (state = initialState, action) => {
-  switch(action.type) {
+  switch (action.type) {
     case ADD_POST:
       return {
         ...state,
-      }
+      };
     case ADD_DUMMY:
       return {
         ...state,
-        mainPosts: [ action.data, ...state.mainPosts ]
-      }
-    default: 
+        mainPosts: [action.data, ...state.mainPosts],
+      };
+    default:
       return {
-        ...state
-      }
+        ...state,
+      };
   }
-}
+};
 
 export default reducer;

@@ -3,7 +3,6 @@ import { Form, Input, Button } from 'antd';
 import { useSelector } from 'react-redux';
 
 const PostForm = () => {
-
   const { imagePaths } = useSelector(state => state.post);
 
   return (
@@ -15,16 +14,14 @@ const PostForm = () => {
         <Button type="primary" style={{ float: 'right' }} htmlType="submit">트윗</Button>
       </div>
       <div>
-        {imagePaths.map((v, i) => {
-          return (
-            <div key={v} style={{ display: 'inline-block' }}>
-              <img src={'http://localhost:3065/' + v} style={{ width: '200px' }} alt={v} />
-              <div>
-                <Button>제거</Button>
-              </div>
+        {imagePaths.map((v, i) => (
+          <div key={v} style={{ display: 'inline-block' }}>
+            <img src={`http://localhost:3065/${v}`} style={{ width: '200px' }} alt={v} />
+            <div>
+              <Button>제거</Button>
             </div>
-          );
-        })}
+          </div>
+        ))}
       </div>
     </Form>
   );

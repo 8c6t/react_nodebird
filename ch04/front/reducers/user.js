@@ -3,7 +3,7 @@ const dummyUser = {
   Post: [],
   Following: [],
   Followers: [],
-  isLoggedIn: false
+  isLoggedIn: false,
 };
 
 export const initialState = {
@@ -24,29 +24,26 @@ export const LOG_OUT_REQUEST = 'LOG_OUT_REQUEST';
 export const LOG_OUT_SUCCESS = 'LOG_OUT_SUCCESS';
 export const LOG_OUT_FAILURE = 'LOG_OUT_FAILURE';
 
-export const signUpAction = (data) => ({
+export const signUpAction = data => ({
   type: SIGN_UP_REQUEST,
-  data
+  data,
 });
 
-export const singUpSuccess = {
-  type: SIGN_UP_SUCCESS
-}
+export const signUpSuccess = {
+  type: SIGN_UP_SUCCESS,
+};
 
-export const loginAction = (data) => {
-  return {
-    type: LOG_IN_REQUEST,
-    data
-  }
-}
+export const loginAction = data => ({
+  type: LOG_IN_REQUEST,
+  data,
+});
 
 export const logoutAction = {
   type: LOG_OUT_REQUEST,
-}
-
+};
 
 const reducer = (state = initialState, action) => {
-  switch(action.type) {
+  switch (action.type) {
     case LOG_IN_REQUEST:
       return {
         ...state,
@@ -54,29 +51,29 @@ const reducer = (state = initialState, action) => {
         user: dummyUser,
         loginData: action.data,
         isLoading: true,
-      }
+      };
     case LOG_IN_SUCCESS: {
       return {
         ...state,
         isLoading: false,
-      }
+      };
     }
     case LOG_OUT_REQUEST:
       return {
         ...state,
         isLoggedIn: false,
         user: null,
-      }
+      };
     case SIGN_UP_REQUEST:
       return {
         ...state,
-        signUpData: action.data
-      }
+        signUpData: action.data,
+      };
     default:
       return {
         ...state,
-      }
+      };
   }
-}
+};
 
 export default reducer;

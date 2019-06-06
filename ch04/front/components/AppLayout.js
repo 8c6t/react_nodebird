@@ -1,13 +1,13 @@
 import React from 'react';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
-import LoginForm from './LoginForm';
-import UserProfile from './UserProfile';
-import { Menu, Input,  Row, Col } from 'antd';
+import { Menu, Input, Row, Col } from 'antd';
 import { useSelector } from 'react-redux';
 
-const AppLayout = ({ children }) => {
+import LoginForm from './LoginForm';
+import UserProfile from './UserProfile';
 
+const AppLayout = ({ children }) => {
   const { isLoggedIn } = useSelector(state => state.user);
 
   return (
@@ -38,11 +38,11 @@ const AppLayout = ({ children }) => {
         </Col>
       </Row>
     </div>
-  )
-}
+  );
+};
 
 AppLayout.propTypes = {
-  children: PropTypes.node,
-}
+  children: PropTypes.node.isRequired,
+};
 
 export default AppLayout;

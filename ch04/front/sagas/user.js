@@ -1,7 +1,7 @@
 import { all, fork, call, put, take, takeEvery, takeLatest, delay } from 'redux-saga/effects';
-import { LOG_IN, LOG_IN_SUCCESS, LOG_IN_FAILURE } from '../reducers/user';
+import { LOG_IN_REQUEST, LOG_IN_SUCCESS, LOG_IN_FAILURE } from '../reducers/user';
 
-const HELLO_SAGA = "HELLO_SAGA";
+const HELLO_SAGA = 'HELLO_SAGA';
 
 function loginAPI() {
   // 서버에 요청을 보내는 부분
@@ -22,7 +22,7 @@ function* login() {
 
 // 액션 실행 여부 대기
 function* watchLogin() {
-  yield takeEvery(LOG_IN, login)
+  yield takeEvery(LOG_IN_REQUEST, login);
 }
 
 function* watchSignUp() {
@@ -48,7 +48,7 @@ function* watchSignUp() {
 
 function* hello() {
   yield delay(1000);
-  yield put({ type: 'BYE_SAGA' })
+  yield put({ type: 'BYE_SAGA' });
 }
 
 function* watchHello() {
