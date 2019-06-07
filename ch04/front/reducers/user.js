@@ -3,6 +3,7 @@ const dummyUser = {
   Post: [],
   Following: [],
   Followers: [],
+  id: 1,
 };
 
 export const initialState = {

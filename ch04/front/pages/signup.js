@@ -1,8 +1,18 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Form, Input, Checkbox, Button } from 'antd';
-import { useDispatch } from 'react-redux';
+import PropTypes from 'prop-types';
+import { useDispatch, useSelector } from 'react-redux';
+import Router from 'next/router';
 
 import * as userActions from '../reducers/user';
+
+const TextInput = ({ value }) => (
+  <div>{value}</div>
+);
+
+TextInput.propTypes = {
+  value: PropTypes.string,
+};
 
 // 커스텀 훅
 export const useInput = (initValue = null) => {
@@ -24,6 +34,15 @@ const Signup = () => {
   const [id, onChangeId] = useInput('');
   const [nick, onChangeNick] = useInput('');
   const [password, onChangePassword] = useInput('');
+
+  const { isSigningUp, me } = useSelector(state => state.user);
+
+  useEffect(() => {
+    if (me) {
+      alert('로그인했으니 메인 페이지로 이동합니다');
+      Router.push('/');
+    }
+  }, [me && me.id]);
 
   const onSubmit = useCallback((e) => {
     e.preventDefault();
@@ -55,6 +74,7 @@ const Signup = () => {
   return (
     <>
       <Form onSubmit={onSubmit} style={{ padding: '1rem' }}>
+        <TextInput value="18620" />
         <div>
           <label htmlFor="user-id">아이디</label>
           <br />
@@ -86,7 +106,7 @@ const Signup = () => {
         </div>
 
         <div style={{ marginTop: '1rem' }}>
-          <Button type="primary" htmlType="submit">가입하기</Button>
+          <Button type="primary" htmlType="submit" loading={isSigningUp}>가입하기</Button>
         </div>
 
       </Form>
