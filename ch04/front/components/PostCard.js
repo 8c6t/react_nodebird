@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Card, Icon, Button, Avatar, Form, Input, List, Comment } from 'antd';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
@@ -9,6 +9,7 @@ const PostCard = ({ post }) => {
   const [commentFormOpened, setCommentFormOpened] = useState(false);
   const [commentText, setCommentText] = useState('');
   const { me } = useSelector(state => state.user);
+  const { commentAdded, isAddingComment } = useSelector(state => state.post);
   const dispatch = useDispatch();
 
   const onToggleComment = useCallback(() => {
@@ -24,8 +25,15 @@ const PostCard = ({ post }) => {
 
     dispatch({
       type: postActions.ADD_COMMENT_REQUEST,
+      data: {
+        postId: post.id,
+      },
     });
-  }, []);
+  }, [me && me.id]);
+
+  useEffect(() => {
+    setCommentText('');
+  }, [commentAdded === true]);
 
   const onChangeCommentText = useCallback((e) => {
     setCommentText(e.target.value);
@@ -56,7 +64,7 @@ const PostCard = ({ post }) => {
             <Form.Item>
               <Input.TextArea rows={4} value={commentText} onChange={onChangeCommentText} />
             </Form.Item>
-            <Button type="primary" htmlType="submit">멘션</Button>
+            <Button type="primary" htmlType="submit" loading={isAddingComment}>멘션</Button>
           </Form>
           <List
             header={`${post.Comments ? post.Comments.length : 0} 멘션`}
@@ -68,7 +76,6 @@ const PostCard = ({ post }) => {
                   author={item.User.nickname}
                   avatar={<Avatar>{item.User.nickname[0]}</Avatar>}
                   content={item.content}
-                  datetime={item.createdAt}
                 />
               </li>
             )}
