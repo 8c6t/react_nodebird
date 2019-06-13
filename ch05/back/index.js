@@ -21,7 +21,10 @@ passportConfig();
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
+app.use(cors({
+  origin: "http://localhost:3000",
+  credentials: true,
+}));
 app.use(cookieParer(process.env.COOKIE_SECRET));
 app.use(session({
   resave: false, // 매번 세션 강제 저장
@@ -30,7 +33,8 @@ app.use(session({
   cookie: {
     httpOnly: true, // 자바스크립트에서 쿠키 조작 X
     secure: false, // https
-  }
+  },
+  name: 'rnbck',
 }));
 app.use(passport.initialize());
 app.use(passport.session());
