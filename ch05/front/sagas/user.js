@@ -3,16 +3,21 @@ import axios from 'axios';
 
 import * as userActions from '../reducers/user';
 
+axios.defaults.baseURL = 'http://localhost:8620/api';
+
 function loginAPI(loginData) {
   // 서버에 요청을 보내는 부분
-  return axios.post('http://localhost:8620/api/user/login', loginData);
+  return axios.post('/user/login', loginData);
 }
 
 function* login(action) {
   try {
     // call: 동기 호출
-    yield call(loginAPI, action.data);
-    yield put({ type: userActions.LOG_IN_SUCCESS }); // put은 dispatch와 동일
+    const result = yield call(loginAPI, action.data);
+    yield put({ // put은 dispatch와 동일
+      type: userActions.LOG_IN_SUCCESS,
+      data: result.data,
+    });
   } catch (error) {
     console.error(error);
     yield put({ type: userActions.LOG_IN_FAILURE });
@@ -25,7 +30,7 @@ function* watchLogin() {
 }
 
 function signUpAPI(signUpData) {
-  return axios.post('http://localhost:8620/api/user/', signUpData);
+  return axios.post('/user/', signUpData);
 }
 
 function* signUp(action) {

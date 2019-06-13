@@ -67,7 +67,7 @@ export default (state = initialState, action) => {
         ...state,
         isLoggingIn: false,
         isLoggedIn: true,
-        me: dummyUser,
+        me: action.data,
         isLoading: false, // next
       };
     }
