@@ -1,4 +1,4 @@
-module.expoorts = (sequelize, DataTypes) => {
+module.exports = (sequelize, DataTypes) => {
   const Hashtag = sequelize.define('Hashtag', {
     name: {
       type: DataTypes.STRING(20),
@@ -6,7 +6,7 @@ module.expoorts = (sequelize, DataTypes) => {
     },
   }, {
     charset: 'utf8',
-    collate: 'utf8_genecal_ci',
+    collate: 'utf8_general_ci',
   });
 
   Hashtag.associate = (db) => {
