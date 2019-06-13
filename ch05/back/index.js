@@ -4,6 +4,7 @@ const cors = require('cors');
 const cookieParer = require('cookie-parser');
 const session = require('express-session');
 const dotenv = require('dotenv');
+const passport = require('passport');
 
 dotenv.config();
 const db = require('./models');
@@ -29,6 +30,8 @@ app.use(session({
     secure: false, // https
   }
 }));
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use('/api/user', userAPIRouter);
 app.use('/api/post', postAPIRouter);
