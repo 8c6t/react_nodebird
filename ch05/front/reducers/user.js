@@ -86,11 +86,35 @@ export default (state = initialState, action) => {
         isLoggedIn: false,
         user: null,
       };
-    case SIGN_UP_REQUEST:
+    case LOG_OUT_SUCCESS: {
       return {
         ...state,
-        signUpData: action.data,
+        isLoggingOut: false,
+        me: null,
       };
+    }
+    case SIGN_UP_REQUEST: {
+      return {
+        ...state,
+        isSigningUp: true,
+        isSignedUp: false,
+        signUpErrorReason: '',
+      };
+    }
+    case SIGN_UP_SUCCESS: {
+      return {
+        ...state,
+        isSigningUp: false,
+        isSignedUp: true,
+      };
+    }
+    case SIGN_UP_FAILURE: {
+      return {
+        ...state,
+        isSigningUp: false,
+        signUpErrorReason: action.error,
+      };
+    }
     default:
       return {
         ...state,

@@ -55,11 +55,15 @@ const Signup = () => {
       return setTermError(true);
     }
 
-    dispatch({
+    return dispatch({
       type: userActions.SIGN_UP_REQUEST,
-      data: { id, password, nick },
+      data: {
+        userId: id,
+        password,
+        nickname: nick,
+      },
     });
-  }, [password, passwordCheck, term]);
+  }, [id, nick, password, passwordCheck, term]);
 
   const onChangePasswordCheck = useCallback((e) => {
     setPasswordError(e.target.value !== password);

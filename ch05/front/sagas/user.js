@@ -24,13 +24,13 @@ function* watchLogin() {
   yield takeEvery(userActions.LOG_IN_REQUEST, login);
 }
 
-function signUpAPI() {
-  // 서버에 요청을 보냄
+function signUpAPI(signUpData) {
+  return axios.post('http://localhost:8620/api/user/', signUpData);
 }
 
-function* signUp() {
+function* signUp(action) {
   try {
-    yield call(signUpAPI);
+    yield call(signUpAPI, action.data);
     yield put({ type: userActions.SIGN_UP_SUCCESS });
   } catch (error) {
     console.error(error);
