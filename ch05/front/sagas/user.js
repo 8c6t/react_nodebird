@@ -31,6 +31,7 @@ function* watchLogin() {
   yield takeEvery(userActions.LOG_IN_REQUEST, login);
 }
 
+
 function signUpAPI(signUpData) {
   return axios.post('/user/', signUpData);
 }
@@ -41,12 +42,57 @@ function* signUp(action) {
     yield put({ type: userActions.SIGN_UP_SUCCESS });
   } catch (error) {
     console.error(error);
-    yield put({ type: userActions.SIGN_UP_FAILURE });
+    yield put({ type: userActions.SIGN_UP_FAILURE, error });
   }
 }
 
 function* watchSignUp() {
   yield takeEvery(userActions.SIGN_UP_REQUEST, signUp);
+}
+
+
+function logoutAPI() {
+  return axios.post('/user/logout', {}, {
+    withCredentials: true,
+  });
+}
+
+function* logout(action) {
+  try {
+    yield call(logoutAPI);
+    yield put({ type: userActions.LOG_OUT_SUCCESS });
+  } catch (error) {
+    console.error(error);
+    yield put({ type: userActions.LOG_OUT_FAILURE });
+  }
+}
+
+function* watchLogout() {
+  yield takeEvery(userActions.LOG_OUT_REQUEST, logout);
+}
+
+
+function loadUserAPI() {
+  return axios.get('/user/', {
+    withCredentials: true,
+  });
+}
+
+function* loadUser() {
+  try {
+    const result = yield call(loadUserAPI);
+    yield put({
+      type: userActions.LOAD_USER_SUCCESS,
+      data: result.data,
+    });
+  } catch (error) {
+    console.error(error);
+    yield put({ type: userActions.LOAD_USER_FAILURE });
+  }
+}
+
+function* watchLoadUser() {
+  yield takeEvery(userActions.LOAD_USER_REQUEST, loadUser);
 }
 
 // 사가 미들웨어에서 제너레이터의 next를 알아서 호출
@@ -55,6 +101,8 @@ export default function* userSaga() {
   // 가급적 fork를 붙여준다
   yield all([
     fork(watchLogin), // fork: 비동기 호출
+    fork(watchLogout),
+    fork(watchLoadUser),
     fork(watchSignUp),
   ]);
 }
