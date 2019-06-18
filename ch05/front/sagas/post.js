@@ -1,15 +1,20 @@
-import { all, fork, takeLatest, put, delay } from 'redux-saga/effects';
+import { all, fork, takeLatest, put, delay, call } from 'redux-saga/effects';
+import axios from 'axios';
+
 import * as postActions from '../reducers/post';
 
-function addPostAPI() {
-
+function addPostAPI(postData) {
+  return axios.post('/post', postData, {
+    withCredentials: true,
+  });
 }
 
-function* addPost() {
+function* addPost(action) {
   try {
-    yield delay(2000);
+    const result = yield call(addPostAPI, action.data);
     yield put({
       type: postActions.ADD_POST_SUCCESS,
+      data: result.data,
     });
   } catch (error) {
     console.error(error);

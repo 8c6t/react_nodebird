@@ -16,9 +16,11 @@ const PostForm = () => {
     e.preventDefault();
     dispatch({
       type: postActions.ADD_POST_REQUEST,
-      data: { text },
+      data: {
+        content: text,
+      },
     });
-  }, []);
+  }, [text]);
 
   const onChangeText = useCallback((e) => {
     setText(e.target.value);

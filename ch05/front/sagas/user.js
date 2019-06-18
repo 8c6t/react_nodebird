@@ -3,8 +3,6 @@ import axios from 'axios';
 
 import * as userActions from '../reducers/user';
 
-axios.defaults.baseURL = 'http://localhost:8620/api';
-
 function loginAPI(loginData) {
   // 서버에 요청을 보내는 부분
   return axios.post('/user/login', loginData, {
