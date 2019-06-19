@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import PostForm from '../components/PostForm';
 import PostCard from '../components/PostCard';
+import { LOAD_MAIN_POST_REQUEST } from '../reducers/post';
 
 const Home = () => {
   const { me } = useSelector(state => state.user);
@@ -14,6 +15,9 @@ const Home = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    dispatch({
+      type: LOAD_MAIN_POST_REQUEST,
+    });
   }, []);
 
   return (

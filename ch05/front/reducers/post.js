@@ -138,6 +138,23 @@ const reducer = (state = initialState, action) => {
         addCommentErrorReason: action.error,
       };
     }
+    case LOAD_MAIN_POST_REQUEST: {
+      return {
+        ...state,
+        mainPosts: [],
+      };
+    }
+    case LOAD_MAIN_POST_SUCCESS: {
+      return {
+        ...state,
+        mainPosts: action.data,
+      };
+    }
+    case LOAD_MAIN_POST_FAILURE: {
+      return {
+        ...state,
+      };
+    }
     default: {
       return {
         ...state,
