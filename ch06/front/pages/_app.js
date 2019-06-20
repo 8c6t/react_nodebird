@@ -14,7 +14,7 @@ import rootSaga from '../sagas';
 
 // Component: next에서 넣는 props(index, profile, signup 등)
 // next에서는 next-redux-wrapper 패키지 설치 필요. props로 받음
-const NodeBird = ({ Component, store }) => (
+const NodeBird = ({ Component, store, pageProps }) => (
   <Provider store={store}>
     <Head>
       <title>NodeBird</title>
@@ -22,7 +22,7 @@ const NodeBird = ({ Component, store }) => (
       <script src="https://cdnjs.cloudflare.com/ajax/libs/antd/3.19.0/antd.js" />
     </Head>
     <AppLayout>
-      <Component />
+      <Component {...pageProps} />
     </AppLayout>
   </Provider>
 );
@@ -30,6 +30,21 @@ const NodeBird = ({ Component, store }) => (
 NodeBird.propTypes = {
   Component: PropTypes.elementType.isRequired,
   store: PropTypes.object.isRequired,
+  pageProps: PropTypes.object.isRequired,
+};
+
+// next에서 넘겨준 context
+NodeBird.getInitialProps = async (context) => {
+  console.log(context);
+  const { ctx, Component } = context;
+  let pageProps = {};
+
+  // 각 페이지에 getInitialProps가 있으면 실행
+  if (Component.getInitialProps) {
+    pageProps = await Component.getInitialProps(ctx);
+  }
+
+  return { pageProps };
 };
 
 const configureStore = (initialState, options) => {
