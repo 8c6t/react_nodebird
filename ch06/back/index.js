@@ -12,6 +12,7 @@ const db = require('./models');
 const userAPIRouter = require('./routes/user');
 const postAPIRouter = require('./routes/post');
 const postsAPIRouter = require('./routes/posts');
+const hashtagAPIRouter = require('./routes/hashtag');
 
 dotenv.config();
 const app = express();
@@ -42,6 +43,7 @@ app.use(passport.session());
 app.use('/api/user', userAPIRouter);
 app.use('/api/post', postAPIRouter);
 app.use('/api/posts', postsAPIRouter);
+app.use('/api/hashtag', hashtagAPIRouter);
 
 app.listen(8620, () => {
   console.log('server is running on localhost:8620');

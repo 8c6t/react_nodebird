@@ -126,6 +126,23 @@ const reducer = (state = initialState, action) => {
         ...state,
       };
     }
+    case LOAD_HASHTAG_POST_REQUEST: {
+      return {
+        ...state,
+        mainPosts: [],
+      };
+    }
+    case LOAD_HASHTAG_POST_SUCCESS: {
+      return {
+        ...state,
+        mainPosts: action.data,
+      };
+    }
+    case LOAD_HASHTAG_POST_FAILURE: {
+      return {
+        ...state,
+      };
+    }
     default: {
       return {
         ...state,
