@@ -109,35 +109,24 @@ const reducer = (state = initialState, action) => {
         addCommentErrorReason: action.error,
       };
     }
-    case LOAD_MAIN_POST_REQUEST: {
-      return {
-        ...state,
-        mainPosts: [],
-      };
-    }
-    case LOAD_MAIN_POST_SUCCESS: {
-      return {
-        ...state,
-        mainPosts: action.data,
-      };
-    }
-    case LOAD_MAIN_POST_FAILURE: {
-      return {
-        ...state,
-      };
-    }
+    case LOAD_MAIN_POST_REQUEST:
+    case LOAD_USER_POST_REQUEST:
     case LOAD_HASHTAG_POST_REQUEST: {
       return {
         ...state,
         mainPosts: [],
       };
     }
+    case LOAD_MAIN_POST_SUCCESS:
+    case LOAD_USER_POST_SUCCESS:
     case LOAD_HASHTAG_POST_SUCCESS: {
       return {
         ...state,
         mainPosts: action.data,
       };
     }
+    case LOAD_MAIN_POST_FAILURE:
+    case LOAD_USER_POST_FAILURE:
     case LOAD_HASHTAG_POST_FAILURE: {
       return {
         ...state,
