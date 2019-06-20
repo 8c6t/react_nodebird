@@ -1,11 +1,3 @@
-const dummyUser = {
-  nickname: 'Hachicore',
-  Post: [],
-  Following: [],
-  Followers: [],
-  id: 1,
-};
-
 export const initialState = {
   isLoggingOut: false, // 로그아웃 시도중
   isLoggingIn: false, // 로그인 시도중
