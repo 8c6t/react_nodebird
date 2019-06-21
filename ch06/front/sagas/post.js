@@ -177,7 +177,7 @@ function uploadImagesAPI(formData) {
 
 function* uploadImages(action) {
   try {
-    const result = yield call(loadCommentsAPI, action.data);
+    const result = yield call(uploadImagesAPI, action.data);
     yield put({
       type: postActions.UPLOAD_IMAGES_SUCCESS,
       data: result.data,
