@@ -49,6 +49,12 @@ const PostForm = () => {
     imageInput.current.click();
   }, [imageInput.current]);
 
+  const onRemoveImage = useCallback(index => () => {
+    dispatch({
+      type: postActions.REMOVE_IMAGE,
+      index,
+    });
+  }, []);
 
   return (
     <Form style={{ margin: '1rem 0rem 2rem' }} encType="multipart/form-data" onSubmit={onSubmitForm}>
@@ -63,7 +69,7 @@ const PostForm = () => {
           <div key={v} style={{ display: 'inline-block' }}>
             <img src={`http://localhost:8620/${v}`} style={{ width: '200px' }} alt={v} />
             <div>
-              <Button>제거</Button>
+              <Button onClick={onRemoveImage(i)}>제거</Button>
             </div>
           </div>
         ))}
