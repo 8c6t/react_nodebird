@@ -15,6 +15,13 @@ const PostCard = ({ post }) => {
 
   const onToggleComment = useCallback(() => {
     setCommentFormOpened(prev => !prev);
+
+    if (!commentFormOpened) {
+      dispatch({
+        type: postActions.LOAD_COMMENTS_REQUEST,
+        data: post.id,
+      });
+    }
   }, []);
 
   const onSubmitComment = useCallback((e) => {
@@ -28,9 +35,10 @@ const PostCard = ({ post }) => {
       type: postActions.ADD_COMMENT_REQUEST,
       data: {
         postId: post.id,
+        content: commentText,
       },
     });
-  }, [me && me.id]);
+  }, [me && me.id, commentText]);
 
   useEffect(() => {
     setCommentText('');

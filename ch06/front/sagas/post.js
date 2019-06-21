@@ -31,17 +31,20 @@ function* watchAddPost() {
 }
 
 // addComment
-function addCommentAPI() {
-
+function addCommentAPI(data) {
+  return axios.post(`/post/${data.postId}/comment`, { content: data.content }, {
+    withCredentials: true,
+  });
 }
 
 function* addComment(action) {
   try {
-    yield delay(2000);
+    const result = yield call(addCommentAPI, action.data);
     yield put({
       type: postActions.ADD_COMMENT_SUCCESS,
       data: {
         postId: action.data.postId,
+        comment: result.data,
       },
     });
   } catch (error) {
@@ -55,6 +58,34 @@ function* addComment(action) {
 
 function* watchAddComment() {
   yield takeLatest(postActions.ADD_COMMENT_REQUEST, addComment);
+}
+
+// addComment
+function loadCommentsAPI(postId) {
+  return axios.get(`/post/${postId}/comments`);
+}
+
+function* loadComments(action) {
+  try {
+    const result = yield call(loadCommentsAPI, action.data);
+    yield put({
+      type: postActions.LOAD_COMMENTS_SUCCESS,
+      data: {
+        postId: action.data,
+        comments: result.data,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    yield put({
+      type: postActions.LOAD_COMMENTS_FAILURE,
+      error,
+    });
+  }
+}
+
+function* watchLoadComments() {
+  yield takeLatest(postActions.LOAD_COMMENTS_REQUEST, loadComments);
 }
 
 // loadMainPosts
@@ -139,5 +170,6 @@ export default function* postSaga() {
     fork(watchAddComment),
     fork(watchLoadHashtagPosts),
     fork(watchLoadUserPosts),
+    fork(watchLoadComments),
   ]);
 }
