@@ -1,9 +1,10 @@
 const express = require('express');
 const db = require('../models');
+const { isLoggedIn } = require('./middleware');
 
 const router = express.Router();
 
-router.post('/', async (req, res, next) => {
+router.post('/', isLoggedIn, async (req, res, next) => {
   try {
     const hashtags = req.body.content.match(/#[^\s]+/g); // # 이후 공백 제외 모든 문자가 하나 이상 일치
     const newPost = await db.Post.create({
@@ -67,12 +68,8 @@ router.get('/:id/comments', async (req, res, next) => {
   }
 });
 
-router.post('/:id/comment', async (req, res, next) => {
+router.post('/:id/comment', isLoggedIn, async (req, res, next) => {
   try {
-    if (!req.user) {
-      res.status(401).send('로그인이 필요합니다');
-    }
-
     const post = await db.Post.findOne({ where: { id: req.params.id } });
 
     if (!post) {

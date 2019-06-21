@@ -60,7 +60,7 @@ function* watchAddComment() {
   yield takeLatest(postActions.ADD_COMMENT_REQUEST, addComment);
 }
 
-// addComment
+// loadComment
 function loadCommentsAPI(postId) {
   return axios.get(`/post/${postId}/comments`);
 }
