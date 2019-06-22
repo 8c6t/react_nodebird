@@ -21,7 +21,9 @@ const upload = multer({
   limits: { fileSize: 20 * 1024 * 1024 },
 });
 
-router.post('/', isLoggedIn, async (req, res, next) => {
+// formdata 파일: req.file(s)
+// formdata 일반 값: req.body
+router.post('/', isLoggedIn, upload.none(), async (req, res, next) => {
   try {
     const hashtags = req.body.content.match(/#[^\s]+/g); // # 이후 공백 제외 모든 문자가 하나 이상 일치
     const newPost = await db.Post.create({
@@ -38,6 +40,18 @@ router.post('/', isLoggedIn, async (req, res, next) => {
       await newPost.addHashtags(result.map(r => r[0]));
     }
 
+    if (req.body.image) {
+      if (Array.isArray(req.body.image)) { // 이미지 주소를 여러 개 올리면 image: [주소1, 주소2]
+        const images = await Promise.all(req.body.image.map((image) => {
+          return db.Image.create({ src: image });
+        }));
+        await newPost.addImages(images); // 복수
+      } else { // 이미지 주소를 하나만 올리면 image: 주소1
+        const image = await db.Image.create({ src: req.body.image });
+        await newPost.addImage(image);
+      }
+    }
+
     // const User = await newPost.getUser();
     // newPost.User = User;
     // res.json(newPost);
@@ -46,6 +60,8 @@ router.post('/', isLoggedIn, async (req, res, next) => {
       where: { id: newPost.id },
       include: [{
         model: db.User,
+      }, {
+        model: db.Image,
       }],
     });
 
