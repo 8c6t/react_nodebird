@@ -3,6 +3,7 @@ import { Card, Icon, Button, Avatar, Form, Input, List, Comment } from 'antd';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
+import PostImages from './PostImages';
 
 import * as postActions from '../reducers/post';
 
@@ -52,7 +53,7 @@ const PostCard = ({ post }) => {
     <div>
       <Card
         key={+post.createdAt}
-        cover={post.img && <img alt="example" src={post.img} />}
+        cover={post.Images[0] && <PostImages images={post.Images} />}
         actions={[
           <Icon type="retweet" key="retweet" />,
           <Icon type="heart" key="heart" />,
@@ -74,7 +75,13 @@ const PostCard = ({ post }) => {
                 if (v.match(/#[^\s]+/)) {
                   return (
                     /* next는 동적 주소를 처리하지 못 함 */
-                    <Link href={{ pathname: '/hashtag', query: { tag: v.slice(1) } }} as={`/hashtag/${v.slice(1)}`} key={v}><a>{v}</a></Link>
+                    <Link
+                      href={{ pathname: '/hashtag', query: { tag: v.slice(1) } }}
+                      as={`/hashtag/${v.slice(1)}`}
+                      key={v}
+                    >
+                      <a>{v}</a>
+                    </Link>
                   );
                 }
                 return v;
