@@ -1,11 +1,12 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { Card, Icon, Button, Avatar, Form, Input, List, Comment } from 'antd';
+import { Card, Icon, Button, Avatar, Form, Input, List, Comment, Popover } from 'antd';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import PostImages from './PostImages';
 
 import * as postActions from '../reducers/post';
+import PostCardContent from './PostCardContent';
 
 const PostCard = ({ post }) => {
   const [commentFormOpened, setCommentFormOpened] = useState(false);
@@ -86,39 +87,62 @@ const PostCard = ({ post }) => {
         cover={post.Images && post.Images[0] && <PostImages images={post.Images} />}
         actions={[
           <Icon type="retweet" key="retweet" onClick={onRetweet} />,
-          <Icon type="heart" key="heart" theme={liked ? 'twoTone' : 'outlined'} twoToneColor="#eb2f96" onClick={onToggleLike} />,
+          <Icon
+            type="heart"
+            key="heart"
+            theme={liked ? 'twoTone' : 'outlined'}
+            twoToneColor="#eb2f96"
+            onClick={onToggleLike}
+          />,
           <Icon type="message" key="message" onClick={onToggleComment} />,
-          <Icon type="ellipsis" key="ellipsis" />,
+          <Popover
+            key="ellipsis"
+            conetnt={(
+              <Button.Group>
+                {me && post.UserId === me.id
+                  ? (
+                    <>
+                      <Button>수정</Button>
+                      <Button type="danger">삭제</Button>
+                    </>
+                  )
+                  : <Button>신고</Button>}
+              </Button.Group>
+            )}
+          >
+            <Icon type="ellipsis" />
+          </Popover>,
         ]}
+        title={post.RetweetId ? `${post.User.nickname}님이 리트윗하셨습니다` : null}
         extra={<Button>팔로우</Button>}
       >
-        <Card.Meta
-          avatar={(
-            <Link href={{ pathname: '/user', query: { id: post.User.id } }} as={`/user/${post.User.id}`}>
-              <a><Avatar>{post.User.nickname[0]}</Avatar></a>
-            </Link>
+        {post.RetweetId && post.Retweet
+          ? (
+            <Card
+              cover={post.Retweet.Images[0] && <PostImages images={post.Retweet.Images} />}
+            >
+              <Card.Meta
+                avatar={(
+                  <Link href={{ pathname: '/user', query: { id: post.User.id } }} as={`/user/${post.User.id}`}>
+                    <a><Avatar>{post.Retweet.User.nickname[0]}</Avatar></a>
+                  </Link>
+                )}
+                title={post.Retweet.User.nickname}
+                description={<PostCardContent postData={post.Retweet.content} />} // next Link
+              />
+            </Card>
+          )
+          : (
+            <Card.Meta
+              avatar={(
+                <Link href={{ pathname: '/user', query: { id: post.User.id } }} as={`/user/${post.User.id}`}>
+                  <a><Avatar>{post.User.nickname[0]}</Avatar></a>
+                </Link>
+              )}
+              title={post.User.nickname}
+              description={<PostCardContent postData={post.content} />} // next Link
+            />
           )}
-          title={post.User.nickname}
-          description={(
-            <div>
-              {post.content.split(/(#[^\s]+)/g).map((v) => {
-                if (v.match(/#[^\s]+/)) {
-                  return (
-                    /* next는 동적 주소를 처리하지 못 함 */
-                    <Link
-                      href={{ pathname: '/hashtag', query: { tag: v.slice(1) } }}
-                      as={`/hashtag/${v.slice(1)}`}
-                      key={v}
-                    >
-                      <a>{v}</a>
-                    </Link>
-                  );
-                }
-                return v;
-              })}
-            </div>
-          )} // next Link
-        />
       </Card>
       {commentFormOpened && (
         <>
