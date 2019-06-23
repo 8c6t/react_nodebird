@@ -225,7 +225,7 @@ function* watchLikePost() {
   yield takeLatest(postActions.LIKE_POST_REQUEST, likePost);
 }
 
-// likePost
+// unlikePost
 function unlikePostAPI(postId) {
   return axios.delete(`/post/${postId}/like`, {
     withCredentials: true,
@@ -255,6 +255,35 @@ function* watchUnlikePost() {
   yield takeLatest(postActions.UNLIKE_POST_REQUEST, unlikePost);
 }
 
+// retweet
+function retweetAPI(postId) {
+  // post 요청은 데이터가 없더라도 빈 객체라도 넣어야한다
+  return axios.post(`/post/${postId}/retweet`, {}, {
+    withCredentials: true,
+  });
+}
+
+function* retweet(action) {
+  try {
+    const result = yield call(retweetAPI, action.data);
+    yield put({
+      type: postActions.RETWEET_SUCCESS,
+      data: result.data,
+    });
+  } catch (error) {
+    console.error(error);
+    yield put({
+      type: postActions.RETWEET_FAILURE,
+      error,
+    });
+    alert(error.response.data);
+  }
+}
+
+function* watchRetweet() {
+  yield takeLatest(postActions.RETWEET_REQUEST, retweet);
+}
+
 export default function* postSaga() {
   yield all([
     fork(watchLoadMainPosts),
@@ -266,5 +295,6 @@ export default function* postSaga() {
     fork(watchUploadImages),
     fork(watchLikePost),
     fork(watchUnlikePost),
+    fork(watchRetweet),
   ]);
 }
