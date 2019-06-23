@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import PostImages from './PostImages';
 
 import * as postActions from '../reducers/post';
+import * as userActions from '../reducers/user';
 import PostCardContent from './PostCardContent';
 
 const PostCard = ({ post }) => {
@@ -80,6 +81,20 @@ const PostCard = ({ post }) => {
     });
   }, [me && me.id, post.id]);
 
+  const onFollow = useCallback(userId => () => {
+    dispatch({
+      type: userActions.FOLLOW_USER_REQUEST,
+      data: userId,
+    });
+  }, []);
+
+  const onUnfollow = useCallback(userId => () => {
+    dispatch({
+      type: userActions.UNFOLLOW_USER_REQUEST,
+      data: userId,
+    });
+  }, []);
+
   return (
     <div>
       <Card
@@ -114,7 +129,12 @@ const PostCard = ({ post }) => {
           </Popover>,
         ]}
         title={post.RetweetId ? `${post.User.nickname}님이 리트윗하셨습니다` : null}
-        extra={<Button>팔로우</Button>}
+        extra={!me || post.User.id === me.id
+          ? null
+          : me.Followings && me.Followings.find(v => v.id === post.User.id)
+            ? <Button onClick={onUnfollow(post.User.id)}>언팔로우</Button>
+            : <Button onClick={onFollow(post.User.id)}>팔로우</Button>
+        }
       >
         {post.RetweetId && post.Retweet
           ? (

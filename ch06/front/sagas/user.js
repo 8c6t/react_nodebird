@@ -70,6 +70,7 @@ function* watchLogout() {
 }
 
 
+// loadUser
 function loadUserAPI(userId) {
   return axios.get(userId ? `/user/${userId}` : '/user/', {
     withCredentials: true,
@@ -94,6 +95,56 @@ function* watchLoadUser() {
   yield takeEvery(userActions.LOAD_USER_REQUEST, loadUser);
 }
 
+
+// follow
+function followAPI(userId) {
+  return axios.post(`/user/${userId}/follow`, {}, {
+    withCredentials: true,
+  });
+}
+
+function* follow(action) {
+  try {
+    const result = yield call(followAPI, action.data);
+    yield put({
+      type: userActions.FOLLOW_USER_SUCCESS,
+      data: result.data,
+    });
+  } catch (error) {
+    console.error(error);
+    yield put({ type: userActions.FOLLOW_USER_FAILURE });
+  }
+}
+
+function* watchFollow() {
+  yield takeEvery(userActions.FOLLOW_USER_REQUEST, follow);
+}
+
+
+// unfollow
+function unfollowAPI(userId) {
+  return axios.delete(`/user/${userId}/follow`, {
+    withCredentials: true,
+  });
+}
+
+function* unfollow(action) {
+  try {
+    const result = yield call(unfollowAPI, action.data);
+    yield put({
+      type: userActions.UNFOLLOW_USER_SUCCESS,
+      data: result.data,
+    });
+  } catch (error) {
+    console.error(error);
+    yield put({ type: userActions.UNFOLLOW_USER_FAILURE });
+  }
+}
+
+function* watchUnfollow() {
+  yield takeEvery(userActions.UNFOLLOW_USER_REQUEST, unfollow);
+}
+
 // 사가 미들웨어에서 제너레이터의 next를 알아서 호출
 export default function* userSaga() {
   // 이벤트 리스너 간에는 순서가 상관 없듯
@@ -103,5 +154,7 @@ export default function* userSaga() {
     fork(watchLogout),
     fork(watchLoadUser),
     fork(watchSignUp),
+    fork(watchFollow),
+    fork(watchUnfollow),
   ]);
 }
