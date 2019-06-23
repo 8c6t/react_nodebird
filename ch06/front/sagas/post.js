@@ -195,6 +195,65 @@ function* watchUploadImages() {
   yield takeLatest(postActions.UPLOAD_IMAGES_REQUEST, uploadImages);
 }
 
+// likePost
+function likePostAPI(postId) {
+  return axios.post(`/post/${postId}/like`, {}, {
+    withCredentials: true,
+  });
+}
+
+function* likePost(action) {
+  try {
+    const result = yield call(likePostAPI, action.data);
+    yield put({
+      type: postActions.LIKE_POST_SUCCESS,
+      data: {
+        postId: action.data,
+        userId: result.data.userId,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    yield put({
+      type: postActions.LIKE_POST_FAILURE,
+      error,
+    });
+  }
+}
+
+function* watchLikePost() {
+  yield takeLatest(postActions.LIKE_POST_REQUEST, likePost);
+}
+
+// likePost
+function unlikePostAPI(postId) {
+  return axios.delete(`/post/${postId}/like`, {
+    withCredentials: true,
+  });
+}
+
+function* unlikePost(action) {
+  try {
+    const result = yield call(unlikePostAPI, action.data);
+    yield put({
+      type: postActions.UNLIKE_POST_SUCCESS,
+      data: {
+        postId: action.data,
+        userId: result.data.userId,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    yield put({
+      type: postActions.UNLIKE_POST_FAILURE,
+      error,
+    });
+  }
+}
+
+function* watchUnlikePost() {
+  yield takeLatest(postActions.UNLIKE_POST_REQUEST, unlikePost);
+}
 
 export default function* postSaga() {
   yield all([
@@ -205,5 +264,7 @@ export default function* postSaga() {
     fork(watchLoadUserPosts),
     fork(watchLoadComments),
     fork(watchUploadImages),
+    fork(watchLikePost),
+    fork(watchUnlikePost),
   ]);
 }

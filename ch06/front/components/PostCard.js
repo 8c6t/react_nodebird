@@ -14,6 +14,8 @@ const PostCard = ({ post }) => {
   const { commentAdded, isAddingComment } = useSelector(state => state.post);
   const dispatch = useDispatch();
 
+  const liked = me && post.Likers && post.Likers.find(v => v.id === me.id);
+
   const onToggleComment = useCallback(() => {
     setCommentFormOpened(prev => !prev);
 
@@ -49,14 +51,32 @@ const PostCard = ({ post }) => {
     setCommentText(e.target.value);
   }, []);
 
+  const onToggleLike = useCallback(() => {
+    if (!me) {
+      return alert('로그인이 필요합니다');
+    }
+
+    if (liked) {
+      dispatch({
+        type: postActions.UNLIKE_POST_REQUEST,
+        data: post.id,
+      });
+    } else {
+      dispatch({
+        type: postActions.LIKE_POST_REQUEST,
+        data: post.id,
+      });
+    }
+  }, [me && me.id, post && post.id, liked]);
+
   return (
     <div>
       <Card
         key={+post.createdAt}
-        cover={post.Images[0] && <PostImages images={post.Images} />}
+        cover={post.Images && post.Images[0] && <PostImages images={post.Images} />}
         actions={[
           <Icon type="retweet" key="retweet" />,
-          <Icon type="heart" key="heart" />,
+          <Icon type="heart" key="heart" theme={liked ? 'twoTone' : 'outlined'} twoToneColor="#eb2f96" onClick={onToggleLike} />,
           <Icon type="message" key="message" onClick={onToggleComment} />,
           <Icon type="ellipsis" key="ellipsis" />,
         ]}
