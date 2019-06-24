@@ -145,14 +145,10 @@ router.delete('/:id/follow', isLoggedIn, async (req, res, next) => {
 
     await me.removeFollowing(req.params.id);
     res.send(req.params.id);
-  } catch (error) {
-    console.error(error);
-    next(error)
+  } catch (e) {
+    console.error(e);
+    next(e);
   }
-});
-
-router.delete('/:id/follower', (req, res) => {
-
 });
 
 router.get('/:id/posts', async (req, res, next) => {
@@ -174,6 +170,54 @@ router.get('/:id/posts', async (req, res, next) => {
         attributes: ['id'],
       }],
     });
+    
+    res.json(posts);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+router.get('/:id/followings', isLoggedIn, async (req, res, next) => {
+  try {
+    const user = await db.User.findOne({
+      where: { id: parseInt(req.params.id, 10) }
+    });
+    const followings = await user.getFollowings({
+      attributes: ['id', 'nickname'],
+    });
+
+    res.json(followings);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+router.get('/:id/followers', isLoggedIn, async (req, res, next) => {
+  try {
+    const user = await db.User.findOne({
+      where: { id: parseInt(req.params.id, 10) }
+    });
+    const followers = await user.getFollowers({
+      attributes: ['id', 'nickname'],
+    });
+    
+    res.json(followers);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+router.delete('/:id/follower', isLoggedIn, async (req, res, next) => {
+  try {
+    const me = await db.User.findOne({
+      where: { id: req.user.id },
+    });
+
+    await me.removeFollower(req.params.id);
+    res.send(req.params.id);
   } catch (error) {
     console.error(error);
     next(error);

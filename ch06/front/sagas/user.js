@@ -137,13 +137,101 @@ function* unfollow(action) {
     });
   } catch (error) {
     console.error(error);
-    yield put({ type: userActions.UNFOLLOW_USER_FAILURE });
+    yield put({
+      type: userActions.UNFOLLOW_USER_FAILURE,
+      error,
+    });
   }
 }
 
 function* watchUnfollow() {
   yield takeEvery(userActions.UNFOLLOW_USER_REQUEST, unfollow);
 }
+
+
+// loadFollowers
+function loadFollowersAPI(userId) {
+  return axios.get(`/user/${userId}/followers`, {
+    withCredentials: true,
+  });
+}
+
+function* loadFollowers(action) {
+  try {
+    const result = yield call(loadFollowersAPI, action.data);
+    yield put({
+      type: userActions.LOAD_FOLLOWERS_SUCCESS,
+      data: result.data,
+    });
+  } catch (error) {
+    console.error(error);
+    yield put({
+      type: userActions.LOAD_FOLLOWERS_FAILURE,
+      error,
+    });
+  }
+}
+
+function* watchLoadFollowers() {
+  yield takeEvery(userActions.LOAD_FOLLOWERS_REQUEST, loadFollowers);
+}
+
+
+// loadFollowings
+function loadFollowingsAPI(userId) {
+  return axios.get(`/user/${userId}/followings`, {
+    withCredentials: true,
+  });
+}
+
+function* loadFollowings(action) {
+  try {
+    const result = yield call(loadFollowingsAPI, action.data);
+    yield put({
+      type: userActions.LOAD_FOLLOWINGS_SUCCESS,
+      data: result.data,
+    });
+  } catch (error) {
+    console.error(error);
+    yield put({
+      type: userActions.LOAD_FOLLOWINGS_FAILURE,
+      error,
+    });
+  }
+}
+
+function* watchLoadFollowings() {
+  yield takeEvery(userActions.LOAD_FOLLOWINGS_REQUEST, loadFollowings);
+}
+
+
+// removeFollower
+function removeFollowerAPI(userId) {
+  return axios.delete(`/user/${userId}/follow`, {
+    withCredentials: true,
+  });
+}
+
+function* removeFollower(action) {
+  try {
+    const result = yield call(removeFollowerAPI, action.data);
+    yield put({
+      type: userActions.REMOVE_FOLLOWER_SUCCESS,
+      data: result.data,
+    });
+  } catch (error) {
+    console.error(error);
+    yield put({
+      type: userActions.REMOVE_FOLLOWER_FAILURE,
+      error,
+    });
+  }
+}
+
+function* watchRemoveFollower() {
+  yield takeEvery(userActions.REMOVE_FOLLOWER_REQUEST, removeFollower);
+}
+
 
 // 사가 미들웨어에서 제너레이터의 next를 알아서 호출
 export default function* userSaga() {
@@ -156,5 +244,8 @@ export default function* userSaga() {
     fork(watchSignUp),
     fork(watchFollow),
     fork(watchUnfollow),
+    fork(watchLoadFollowers),
+    fork(watchLoadFollowings),
+    fork(watchRemoveFollower),
   ]);
 }
