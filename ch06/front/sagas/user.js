@@ -3,6 +3,7 @@ import axios from 'axios';
 
 import * as userActions from '../reducers/user';
 
+// login
 function loginAPI(loginData) {
   // 서버에 요청을 보내는 부분
   return axios.post('/user/login', loginData, {
@@ -30,6 +31,7 @@ function* watchLogin() {
 }
 
 
+// signup
 function signUpAPI(signUpData) {
   return axios.post('/user/', signUpData);
 }
@@ -49,13 +51,14 @@ function* watchSignUp() {
 }
 
 
+// logout
 function logoutAPI() {
   return axios.post('/user/logout', {}, {
     withCredentials: true,
   });
 }
 
-function* logout(action) {
+function* logout() {
   try {
     yield call(logoutAPI);
     yield put({ type: userActions.LOG_OUT_SUCCESS });
@@ -87,7 +90,10 @@ function* loadUser(action) {
     });
   } catch (error) {
     console.error(error);
-    yield put({ type: userActions.LOAD_USER_FAILURE });
+    yield put({
+      type: userActions.LOAD_USER_FAILURE,
+      error,
+    });
   }
 }
 
@@ -112,7 +118,10 @@ function* follow(action) {
     });
   } catch (error) {
     console.error(error);
-    yield put({ type: userActions.FOLLOW_USER_FAILURE });
+    yield put({
+      type: userActions.FOLLOW_USER_FAILURE,
+      error,
+    });
   }
 }
 
@@ -149,34 +158,6 @@ function* watchUnfollow() {
 }
 
 
-// loadFollowers
-function loadFollowersAPI(userId) {
-  return axios.get(`/user/${userId}/followers`, {
-    withCredentials: true,
-  });
-}
-
-function* loadFollowers(action) {
-  try {
-    const result = yield call(loadFollowersAPI, action.data);
-    yield put({
-      type: userActions.LOAD_FOLLOWERS_SUCCESS,
-      data: result.data,
-    });
-  } catch (error) {
-    console.error(error);
-    yield put({
-      type: userActions.LOAD_FOLLOWERS_FAILURE,
-      error,
-    });
-  }
-}
-
-function* watchLoadFollowers() {
-  yield takeEvery(userActions.LOAD_FOLLOWERS_REQUEST, loadFollowers);
-}
-
-
 // loadFollowings
 function loadFollowingsAPI(userId) {
   return axios.get(`/user/${userId}/followings`, {
@@ -205,9 +186,37 @@ function* watchLoadFollowings() {
 }
 
 
+// loadFollowers
+function loadFollowersAPI(userId) {
+  return axios.get(`/user/${userId}/followers`, {
+    withCredentials: true,
+  });
+}
+
+function* loadFollowers(action) {
+  try {
+    const result = yield call(loadFollowersAPI, action.data);
+    yield put({
+      type: userActions.LOAD_FOLLOWERS_SUCCESS,
+      data: result.data,
+    });
+  } catch (error) {
+    console.error(error);
+    yield put({
+      type: userActions.LOAD_FOLLOWERS_FAILURE,
+      error,
+    });
+  }
+}
+
+function* watchLoadFollowers() {
+  yield takeEvery(userActions.LOAD_FOLLOWERS_REQUEST, loadFollowers);
+}
+
+
 // removeFollower
 function removeFollowerAPI(userId) {
-  return axios.delete(`/user/${userId}/follow`, {
+  return axios.delete(`/user/${userId}/follower`, {
     withCredentials: true,
   });
 }
