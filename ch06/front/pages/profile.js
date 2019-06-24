@@ -74,7 +74,7 @@ const Profile = () => {
         dataSource={followerList}
         renderItem={item => (
           <List.Item style={{ marginTop: '2rem' }}>
-            <Card actions={[<Icon key="stop" type="stop" onClick={onRemoveFollower(item.id)}  />]}>
+            <Card actions={[<Icon key="stop" type="stop" onClick={onRemoveFollower(item.id)} />]}>
               <Card.Meta description={item.nickname} />
             </Card>
           </List.Item>

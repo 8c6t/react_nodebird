@@ -12,7 +12,7 @@ router.get('/', isLoggedIn, (req, res) => {
   return res.json(user);
 });
 
-router.post('/', async (req, res) => {
+router.post('/', async (req, res, next) => {
   try {
     const exUser = await db.User.findOne({
       where: { userId: req.body.userId },
@@ -119,10 +119,6 @@ router.post('/login', (req, res, next) => {
   })(req, res, next);
 });
 
-router.get('/:id/follow', (req, res) => {
-
-});
-
 router.post('/:id/follow', isLoggedIn, async (req, res, next) => {
   try {
     const me = await db.User.findOne({
@@ -151,32 +147,6 @@ router.delete('/:id/follow', isLoggedIn, async (req, res, next) => {
   }
 });
 
-router.get('/:id/posts', async (req, res, next) => {
-  try {
-    const posts = await db.Post.findAll({
-      where: {
-        UserId: parseInt(req.params.id, 10),
-        RetweetId: null,
-      },
-      include: [{
-        model: db.User,
-        attributes: ['id', 'nickname'],
-      }, {
-        model: db.Image,
-      }, {
-        model: db.User,
-        through: 'Like',
-        as: 'Likers',
-        attributes: ['id'],
-      }],
-    });
-    
-    res.json(posts);
-  } catch (error) {
-    console.error(error);
-    next(error);
-  }
-});
 
 router.get('/:id/followings', isLoggedIn, async (req, res, next) => {
   try {
@@ -218,6 +188,48 @@ router.delete('/:id/follower', isLoggedIn, async (req, res, next) => {
 
     await me.removeFollower(req.params.id);
     res.send(req.params.id);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+router.get('/:id/posts', async (req, res, next) => {
+  try {
+    const posts = await db.Post.findAll({
+      where: {
+        UserId: parseInt(req.params.id, 10),
+        RetweetId: null,
+      },
+      include: [{
+        model: db.User,
+        attributes: ['id', 'nickname'],
+      }, {
+        model: db.Image,
+      }, {
+        model: db.User,
+        through: 'Like',
+        as: 'Likers',
+        attributes: ['id'],
+      }],
+    });
+    
+    res.json(posts);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+router.patch('/nickname', isLoggedIn, async (req, res, next) => {
+  try {
+    await db.User.update({
+      nickname: req.body.nickname,
+    }, {
+      where: { id: req.user.id },
+    });
+
+    res.json(req.body.nickname);
   } catch (error) {
     console.error(error);
     next(error);

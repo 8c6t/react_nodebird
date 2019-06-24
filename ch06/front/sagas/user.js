@@ -242,6 +242,33 @@ function* watchRemoveFollower() {
 }
 
 
+// editNickname
+function editNicknameAPI(nickname) {
+  return axios.patch('/user/nickname', { nickname }, {
+    withCredentials: true,
+  });
+}
+
+function* editNickname(action) {
+  try {
+    const result = yield call(editNicknameAPI, action.data);
+    yield put({
+      type: userActions.EDIT_NICKNAME_SUCCESS,
+      data: result.data,
+    });
+  } catch (error) {
+    console.error(error);
+    yield put({
+      type: userActions.EDIT_NICKNAME_FAILURE,
+      error,
+    });
+  }
+}
+
+function* watchEditNickname() {
+  yield takeEvery(userActions.EDIT_NICKNAME_REQUEST, editNickname);
+}
+
 // 사가 미들웨어에서 제너레이터의 next를 알아서 호출
 export default function* userSaga() {
   // 이벤트 리스너 간에는 순서가 상관 없듯
@@ -256,5 +283,6 @@ export default function* userSaga() {
     fork(watchLoadFollowers),
     fork(watchLoadFollowings),
     fork(watchRemoveFollower),
+    fork(watchEditNickname),
   ]);
 }
