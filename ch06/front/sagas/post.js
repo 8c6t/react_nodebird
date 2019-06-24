@@ -2,6 +2,7 @@ import { all, fork, takeLatest, put, delay, call } from 'redux-saga/effects';
 import axios from 'axios';
 
 import * as postActions from '../reducers/post';
+import * as userActions from '../reducers/user';
 
 // loadMainPosts
 function loadMainPostsAPI() {
@@ -39,9 +40,13 @@ function addPostAPI(postData) {
 function* addPost(action) {
   try {
     const result = yield call(addPostAPI, action.data);
-    yield put({
+    yield put({ // post reducer 데이터 수정
       type: postActions.ADD_POST_SUCCESS,
       data: result.data,
+    });
+    yield put({ // user reducer 데이터 수장
+      type: userActions.ADD_POST_TO_ME,
+      data: result.data.id,
     });
   } catch (error) {
     console.error(error);
