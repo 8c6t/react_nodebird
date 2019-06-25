@@ -10,13 +10,6 @@ const Hashtag = ({ tag }) => {
   const dispatch = useDispatch();
   const { mainPosts } = useSelector(state => state.post);
 
-  useEffect(() => {
-    dispatch({
-      type: postActions.LOAD_HASHTAG_POST_REQUEST,
-      data: tag,
-    });
-  }, []);
-
   return (
     <div>
       {mainPosts.map(c => (
@@ -33,8 +26,13 @@ Hashtag.propTypes = {
 // 라이프사이클 메소드. componentDidMount보다 먼저 실행됨
 // SSR을 위해 사용
 Hashtag.getInitialProps = async (context) => {
+  const tag = context.query.tag;
   console.log('hashtag getInitialProps', context.query.tag);
-  return { tag: context.query.tag };
+  context.store.dispatch({
+    type: postActions.LOAD_HASHTAG_POST_REQUEST,
+    data: tag,
+  });
+  return { tag };
 };
 
 export default Hashtag;

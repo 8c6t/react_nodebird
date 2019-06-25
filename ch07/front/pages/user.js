@@ -8,23 +8,9 @@ import PostCard from '../components/PostCard';
 import * as postActions from '../reducers/post';
 import * as userActions from '../reducers/user';
 
-const User = ({ id }) => {
-
-  const dispatch = useDispatch();
+const User = () => {
   const { mainPosts } = useSelector(state => state.post);
   const { userInfo } = useSelector(state => state.user);
-
-  useEffect(() => {
-    dispatch({
-      type: userActions.LOAD_USER_REQUEST,
-      data: id,
-    });
-
-    dispatch({
-      type: postActions.LOAD_USER_POST_REQUEST,
-      data: id,
-    });
-  }, []);
 
   return (
     <div>
@@ -69,9 +55,21 @@ User.propTypes = {
 
 // context: 서버측에서 전달한 데이터가 있음
 User.getInitialProps = async (context) => {
-  console.log('user getInitialProps', context.query.id);
+  const id = parseInt(context.query.id, 10);
+  console.log('user getInitialProps', id);
+
+  context.store.dispatch({
+    type: userActions.LOAD_USER_REQUEST,
+    data: id,
+  });
+
+  context.store.dispatch({
+    type: postActions.LOAD_USER_POST_REQUEST,
+    data: id,
+  });
+
   // component의 props로 데이터를 전달
-  return { id: parseInt(context.query.id, 10) };
+  return { id };
 };
 
 export default User;

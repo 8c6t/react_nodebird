@@ -71,7 +71,10 @@ NodeBird.getInitialProps = async (context) => {
 
 const configureStore = (initialState, options) => {
   const sagaMiddleware = createSagaMiddleware();
-  const middlewares = [sagaMiddleware];
+  const middlewares = [sagaMiddleware, (store) => (next) => (action) => {
+    console.log(action);
+    next(action);
+  }];
 
   // compose: 미들웨어 여럿을 합성
   // applyMiddleware: 해당 미들웨어들을 적용
