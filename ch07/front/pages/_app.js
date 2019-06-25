@@ -1,6 +1,7 @@
 import React from 'react';
 import Head from 'next/head';
 import PropTypes from 'prop-types';
+import axios from 'axios';
 
 import { createStore, compose, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
@@ -12,6 +13,8 @@ import createSagaMiddleware from 'redux-saga';
 import AppLayout from '../components/AppLayout';
 import reducer from '../reducers';
 import rootSaga from '../sagas';
+
+import { LOAD_USER_REQUEST } from '../reducers/user';
 
 // Component: next에서 넣는 props(index, profile, signup 등)
 // next에서는 next-redux-wrapper 패키지 설치 필요. props로 받음
@@ -41,6 +44,22 @@ NodeBird.getInitialProps = async (context) => {
   console.log(context);
   const { ctx, Component } = context;
   let pageProps = {};
+
+  const state = ctx.store.getState();
+  // 서버 측에서 쿠키를 직접 전송. req 같은 정보는 서버 환경에서만 있음
+  const cookie = ctx.isServer ? ctx.req.headers.cookie : '';
+  console.log('cookie', cookie);
+
+  // 서버 환경이고 쿠키라면
+  if (ctx.isServer && cookie) {
+    axios.defaults.headers.cookie = cookie;
+  }
+
+  if (!state.user.me) {
+    ctx.store.dispatch({
+      type: LOAD_USER_REQUEST,
+    });
+  }
 
   // 각 페이지에 getInitialProps가 있으면 실행
   if (Component.getInitialProps) {
