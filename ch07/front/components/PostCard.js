@@ -95,6 +95,13 @@ const PostCard = ({ post }) => {
     });
   }, []);
 
+  const onRemovePost = useCallback(postId => () => {
+    dispatch({
+      type: postActions.REMOVE_POST_REQUEST,
+      data: postId,
+    });
+  }, []);
+
   return (
     <div>
       <Card
@@ -112,13 +119,13 @@ const PostCard = ({ post }) => {
           <Icon type="message" key="message" onClick={onToggleComment} />,
           <Popover
             key="ellipsis"
-            conetnt={(
+            content={(
               <Button.Group>
                 {me && post.UserId === me.id
                   ? (
                     <>
                       <Button>수정</Button>
-                      <Button type="danger">삭제</Button>
+                      <Button type="danger" onClick={onRemovePost(post.id)}>삭제</Button>
                     </>
                   )
                   : <Button>신고</Button>}

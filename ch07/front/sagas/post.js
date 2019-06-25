@@ -289,6 +289,41 @@ function* watchRetweet() {
   yield takeLatest(postActions.RETWEET_REQUEST, retweet);
 }
 
+
+// retweet
+function removePostAPI(postId) {
+  // post 요청은 데이터가 없더라도 빈 객체라도 넣어야한다
+  return axios.delete(`/post/${postId}`, {
+    withCredentials: true,
+  });
+}
+
+function* removePost(action) {
+  try {
+    const result = yield call(removePostAPI, action.data);
+    yield put({
+      type: postActions.REMOVE_POST_SUCCESS,
+      data: result.data,
+    });
+
+    // user 리듀서에서 처리해야 함
+    yield put({
+      type: userActions.REMOVE_POST_OF_ME,
+      data: result.data,
+    });
+  } catch (error) {
+    console.error(error);
+    yield put({
+      type: postActions.REMOVE_POST_FAILURE,
+      error,
+    });
+  }
+}
+
+function* watchRemovePost() {
+  yield takeLatest(postActions.REMOVE_POST_REQUEST, removePost);
+}
+
 export default function* postSaga() {
   yield all([
     fork(watchLoadMainPosts),
@@ -301,5 +336,6 @@ export default function* postSaga() {
     fork(watchLikePost),
     fork(watchUnlikePost),
     fork(watchRetweet),
+    fork(watchRemovePost),
   ]);
 }
