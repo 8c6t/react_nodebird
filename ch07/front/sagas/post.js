@@ -121,7 +121,7 @@ function* watchLoadHashtagPosts() {
 
 // loadUserPosts
 function loadUserPostsAPI(id) {
-  return axios.get(`/user/${id}/posts`);
+  return axios.get(`/user/${id || 0}/posts`);
 }
 
 function* loadUserPosts(action) {

@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useCallback } from 'react';
 import { Button, List, Card, Icon } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -11,25 +11,8 @@ import PostCard from '../components/PostCard';
 const Profile = () => {
   const dispatch = useDispatch();
 
-  const { me, followingList, followerList } = useSelector(state => state.user);
+  const { followingList, followerList } = useSelector(state => state.user);
   const { mainPosts } = useSelector(state => state.post);
-
-  useEffect(() => {
-    if (me) {
-      dispatch({
-        type: userActions.LOAD_FOLLOWERS_REQUEST,
-        data: me.id,
-      });
-      dispatch({
-        type: userActions.LOAD_FOLLOWINGS_REQUEST,
-        data: me.id,
-      });
-      dispatch({
-        type: postActions.LOAD_USER_POST_REQUEST,
-        data: me.id,
-      });
-    }
-  }, [me && me.id]);
 
   const onUnfollow = useCallback(userId => () => {
     dispatch({
@@ -87,6 +70,27 @@ const Profile = () => {
       </div>
     </>
   );
+};
+
+Profile.getInitialProps = async (context) => {
+  const state = context.store.getState();
+  const me = state.user.me;
+
+  // 이 직전에 LOAD_USER_REQUEST
+  context.store.dispatch({
+    type: userActions.LOAD_FOLLOWERS_REQUEST,
+    data: me && me.id,
+  });
+  context.store.dispatch({
+    type: userActions.LOAD_FOLLOWINGS_REQUEST,
+    data: me && me.id,
+  });
+  context.store.dispatch({
+    type: postActions.LOAD_USER_POST_REQUEST,
+    data: me && me.id,
+  });
+
+  // LOAD_USER_SUCCESS 되어 me가 생김
 };
 
 export default Profile;
