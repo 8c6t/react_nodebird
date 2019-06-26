@@ -5,13 +5,13 @@ import * as postActions from '../reducers/post';
 import * as userActions from '../reducers/user';
 
 // loadMainPosts
-function loadMainPostsAPI() {
-  return axios.get('/posts');
+function loadMainPostsAPI(lastId = 0, limit = 10) {
+  return axios.get(`/posts?lastId=${lastId}&limit=${limit}`);
 }
 
-function* loadMainPosts() {
+function* loadMainPosts(action) {
   try {
-    const result = yield call(loadMainPostsAPI);
+    const result = yield call(loadMainPostsAPI, action.lastId);
     yield put({
       type: postActions.LOAD_MAIN_POST_SUCCESS,
       data: result.data,
@@ -94,13 +94,13 @@ function* watchAddComment() {
 
 
 // loadHashtagPosts
-function loadHashtagPostsAPI(tag) {
-  return axios.get(`/hashtag/${encodeURIComponent(tag)}`);
+function loadHashtagPostsAPI(tag, lastId = 0, limit = 10) {
+  return axios.get(`/hashtag/${encodeURIComponent(tag)}?lastId=${lastId}&limit=${limit}`);
 }
 
 function* loadHashtagPosts(action) {
   try {
-    const result = yield call(loadHashtagPostsAPI, action.data);
+    const result = yield call(loadHashtagPostsAPI, action.data, action.lastId);
     yield put({
       type: postActions.LOAD_HASHTAG_POST_SUCCESS,
       data: result.data,

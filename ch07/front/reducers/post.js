@@ -135,7 +135,7 @@ const reducer = (state = initialState, action) => {
     case LOAD_HASHTAG_POST_SUCCESS: {
       return {
         ...state,
-        mainPosts: action.data,
+        mainPosts: state.mainPosts.concat(action.data),
       };
     }
     case LOAD_MAIN_POST_FAILURE:
