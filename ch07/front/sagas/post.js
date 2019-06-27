@@ -1,4 +1,4 @@
-import { all, fork, takeLatest, put, delay, call } from 'redux-saga/effects';
+import { all, fork, takeLatest, put, call, throttle } from 'redux-saga/effects';
 import axios from 'axios';
 
 import * as postActions from '../reducers/post';
@@ -26,7 +26,9 @@ function* loadMainPosts(action) {
 }
 
 function* watchLoadMainPosts() {
-  yield takeLatest(postActions.LOAD_MAIN_POST_REQUEST, loadMainPosts);
+  // throttle: 같은 요청을 일정 시간 동안 무시(network 참고)
+  yield throttle(2000, postActions.LOAD_MAIN_POST_REQUEST, loadMainPosts);
+  // yield takeLatest(postActions.LOAD_MAIN_POST_REQUEST, loadMainPosts);
 }
 
 
@@ -115,7 +117,7 @@ function* loadHashtagPosts(action) {
 }
 
 function* watchLoadHashtagPosts() {
-  yield takeLatest(postActions.LOAD_HASHTAG_POST_REQUEST, loadHashtagPosts);
+  yield throttle(2000, postActions.LOAD_HASHTAG_POST_REQUEST, loadHashtagPosts);
 }
 
 
