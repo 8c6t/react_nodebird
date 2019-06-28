@@ -326,6 +326,34 @@ function* watchRemovePost() {
   yield takeLatest(postActions.REMOVE_POST_REQUEST, removePost);
 }
 
+
+// retweet
+function loadPostAPI(postId) {
+  // post 요청은 데이터가 없더라도 빈 객체라도 넣어야한다
+  return axios.get(`/post/${postId}`);
+}
+
+function* loadPost(action) {
+  try {
+    const result = yield call(loadPostAPI, action.data);
+    yield put({
+      type: postActions.LOAD_POST_SUCCESS,
+      data: result.data,
+    });
+  } catch (error) {
+    console.error(error);
+    yield put({
+      type: postActions.LOAD_POST_FAILURE,
+      error,
+    });
+  }
+}
+
+function* watchLoadPost() {
+  yield takeLatest(postActions.LOAD_POST_REQUEST, loadPost);
+}
+
+
 export default function* postSaga() {
   yield all([
     fork(watchLoadMainPosts),
@@ -339,5 +367,6 @@ export default function* postSaga() {
     fork(watchUnlikePost),
     fork(watchRetweet),
     fork(watchRemovePost),
+    fork(watchLoadPost),
   ]);
 }
