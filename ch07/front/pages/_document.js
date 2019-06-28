@@ -1,16 +1,20 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import Document, { Main, NextScript } from 'next/document';
 
 class MyDocument extends Document {
   static getInitialProps(context) {
-    return { helmet: Helmet.renderStatic() };
+    // App = _app.js
+    const page = context.renderPage((App) => (props) => <App {...props} />);
+    return { ...page, helmet: Helmet.renderStatic() };
   }
 
   render() {
     const { htmlAttributes, bodyAttributes, ...helmet } = this.props.helmet;
     const htmlAttrs = htmlAttributes.toComponent();
     const bodyAttrs = bodyAttributes.toComponent();
+    console.log(helmet);
 
     return (
       <html {...htmlAttrs}>
@@ -22,6 +26,12 @@ class MyDocument extends Document {
           <NextScript />
         </body>
       </html>
-    )
+    );
   }
 }
+
+MyDocument.propTypes = {
+  helmet: PropTypes.object.isRequired,
+};
+
+export default MyDocument;
