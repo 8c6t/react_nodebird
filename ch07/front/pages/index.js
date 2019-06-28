@@ -16,7 +16,6 @@ const Home = () => {
   // clientHeight: 화면 높이
   // scrollHeight: 전체 화면 길이
   const onScroll = useCallback(() => {
-    console.log(window.scrollY, document.documentElement.clientHeight, document.documentElement.scrollHeight);
     if (window.scrollY + document.documentElement.clientHeight > document.documentElement.scrollHeight - 300) {
       if (hasMorePost) {
         dispatch({
@@ -32,7 +31,7 @@ const Home = () => {
     return () => {
       window.removeEventListener('scroll', onScroll);
     };
-  }, [mainPosts.length]);
+  }, [mainPosts.length, hasMorePost]);
 
   return (
     <div>
