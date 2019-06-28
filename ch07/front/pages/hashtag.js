@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -8,15 +8,20 @@ import PostCard from '../components/PostCard';
 const Hashtag = ({ tag }) => {
   const dispatch = useDispatch();
   const { mainPosts, hasMorePost } = useSelector(state => state.post);
+  const countRef = useRef([]);
 
   const onScroll = useCallback(() => {
     if (window.scrollY + document.documentElement.clientHeight > document.documentElement.scrollHeight - 300) {
       if (hasMorePost) {
-        dispatch({
-          type: postActions.LOAD_HASHTAG_POST_REQUEST,
-          lastId: mainPosts[mainPosts.length - 1].id,
-          data: tag,
-        });
+        const lastId = mainPosts[mainPosts.length - 1].id;
+        if (!countRef.current.includes(lastId)) {
+          dispatch({
+            type: postActions.LOAD_HASHTAG_POST_REQUEST,
+            lastId: mainPosts[mainPosts.length - 1].id,
+            data: tag,
+          });
+        }
+        countRef.current.push(lastId);
       }
     }
   }, [mainPosts.length, hasMorePost]);

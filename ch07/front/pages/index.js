@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import PostForm from '../components/PostForm';
@@ -11,6 +11,7 @@ const Home = () => {
   // const isLoggedIn = useSelector(state => state.user.isLoggedIn);
   const { me } = useSelector(state => state.user);
   const { mainPosts, hasMorePost } = useSelector(state => state.post);
+  const countRef = useRef([]);
 
   // scrollY: 스크롤 내린 거리
   // clientHeight: 화면 높이
@@ -18,10 +19,14 @@ const Home = () => {
   const onScroll = useCallback(() => {
     if (window.scrollY + document.documentElement.clientHeight > document.documentElement.scrollHeight - 300) {
       if (hasMorePost) {
-        dispatch({
-          type: LOAD_MAIN_POST_REQUEST,
-          lastId: mainPosts[mainPosts.length - 1].id,
-        });
+        const lastId = mainPosts[mainPosts.length - 1].id;
+        if (!countRef.current.includes(lastId)) {
+          dispatch({
+            type: LOAD_MAIN_POST_REQUEST,
+            lastId,
+          });
+        }
+        countRef.current.push(lastId);
       }
     }
   }, [mainPosts.length, hasMorePost]);
