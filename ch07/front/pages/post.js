@@ -1,12 +1,29 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
+import Helmet from 'react-helmet';
+
 import { LOAD_POST_REQUEST } from '../reducers/post';
 
 const Post = ({ id }) => {
   const { singlePost } = useSelector(state => state.post);
   return (
     <>
+      <Helmet
+        title={`${singlePost.User.nickname}님의 글`}
+        description={singlePost.content}
+        meta={[{
+          name: 'description', content: singlePost.content,
+        }, {
+          property: 'og:title', content: `${singlePost.User.nickname}님의 글`,
+        }, {
+          property: 'og: description', content: singlePost.content,
+        }, {
+          property: 'og:image', content: singlePost.Images[0] && `http://localhost:8620/${singlePost.Images[0].src}`,
+        }, {
+          property: 'og:url', content: `http://localhost:3131/post/${id}`,
+        }]}
+      />
       <div>{singlePost.content}</div>
       <div>{singlePost.User.nickname}</div>
       <div>
