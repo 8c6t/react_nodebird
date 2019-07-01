@@ -17,7 +17,7 @@ const Hashtag = ({ tag }) => {
         if (!countRef.current.includes(lastId)) {
           dispatch({
             type: postActions.LOAD_HASHTAG_POST_REQUEST,
-            lastId: mainPosts[mainPosts.length - 1].id,
+            lastId: mainPosts[mainPosts.length - 1] && mainPosts[mainPosts.length - 1].id,
             data: tag,
           });
         }
