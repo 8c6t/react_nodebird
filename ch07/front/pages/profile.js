@@ -5,8 +5,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as userActions from '../reducers/user';
 import * as postActions from '../reducers/post';
 
-import NicknameEditForm from '../components/NicknameEditForm';
-import PostCard from '../components/PostCard';
+import NicknameEditForm from '../containers/NicknameEditForm';
+import PostCard from '../containers/PostCard';
 
 const Profile = () => {
   const dispatch = useDispatch();

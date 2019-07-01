@@ -1,15 +1,15 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { Card, Icon, Button, Avatar, Form, Input, List, Comment, Popover } from 'antd';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
+import { Card, Icon, Button, Avatar, Form, Input, List, Comment, Popover } from 'antd';
 import styled from 'styled-components';
 
-import PostImages from './PostImages';
+import PostImages from '../components/PostImages';
+import PostCardContent from '../components/PostCardContent';
 
 import * as postActions from '../reducers/post';
 import * as userActions from '../reducers/user';
-import PostCardContent from './PostCardContent';
 
 const CardWrapper = styled.div`
   margin-bottom: 20px;

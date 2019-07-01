@@ -1,7 +1,8 @@
 import React, { useCallback } from 'react';
 import Link from 'next/link';
-import { Card, Avatar, Button } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
+import { Card, Avatar, Button } from 'antd';
+
 import * as userActions from '../reducers/user';
 
 const UserProfile = () => {
