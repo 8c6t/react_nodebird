@@ -3,7 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { Card, Avatar } from 'antd';
-import PostCard from '../components/PostCard';
+import PostCard from '../containers/PostCard';
 
 import * as postActions from '../reducers/post';
 import * as userActions from '../reducers/user';
