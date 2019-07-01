@@ -87,7 +87,7 @@ NodeBird.getInitialProps = async (context) => {
 
   // 각 페이지에 getInitialProps가 있으면 실행
   if (Component.getInitialProps) {
-    pageProps = await Component.getInitialProps(ctx);
+    pageProps = await Component.getInitialProps(ctx) || {};
   }
 
   return { pageProps };

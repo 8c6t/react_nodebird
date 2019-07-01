@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import Link from 'next/link';
+import Router from 'next/router';
 import PropTypes from 'prop-types';
 import { Menu, Input, Row, Col } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
@@ -11,6 +12,10 @@ import UserProfile from './UserProfile';
 const AppLayout = ({ children }) => {
   const { me } = useSelector(state => state.user);
 
+  const onSearch = (value) => {
+    Router.push({ pathname: '/hashtag', query: { tag: value } }, `/hashtag/${value}`);
+  };
+
   return (
     <div>
       <Menu mode="horizontal">
@@ -21,7 +26,11 @@ const AppLayout = ({ children }) => {
           <Link href="/profile"><a>프로필</a></Link>
         </Menu.Item>
         <Menu.Item key="mail">
-          <Input.Search style={{ verticalAlign: 'middle' }} enterButton />
+          <Input.Search
+            enterButton
+            style={{ verticalAlign: 'middle' }}
+            onSearch={onSearch}
+          />
         </Menu.Item>
       </Menu>
       <Row gutter={8}>

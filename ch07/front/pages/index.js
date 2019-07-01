@@ -42,7 +42,7 @@ const Home = () => {
     <div>
       { me && <PostForm /> }
       { mainPosts.map(c => (
-        <PostCard key={c} post={c} />
+        <PostCard key={c.id} post={c} />
       ))}
     </div>
   );
