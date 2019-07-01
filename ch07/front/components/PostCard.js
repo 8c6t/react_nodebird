@@ -3,11 +3,17 @@ import { Card, Icon, Button, Avatar, Form, Input, List, Comment, Popover } from 
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
+import styled from 'styled-components';
+
 import PostImages from './PostImages';
 
 import * as postActions from '../reducers/post';
 import * as userActions from '../reducers/user';
 import PostCardContent from './PostCardContent';
+
+const CardWrapper = styled.div`
+  margin-bottom: 20px;
+`;
 
 const PostCard = ({ post }) => {
   const [commentFormOpened, setCommentFormOpened] = useState(false);
@@ -103,7 +109,7 @@ const PostCard = ({ post }) => {
   }, []);
 
   return (
-    <div>
+    <CardWrapper>
       <Card
         key={+post.createdAt}
         cover={post.Images && post.Images[0] && <PostImages images={post.Images} />}
@@ -199,7 +205,7 @@ const PostCard = ({ post }) => {
           />
         </>
       )}
-    </div>
+    </CardWrapper>
   );
 };
 
