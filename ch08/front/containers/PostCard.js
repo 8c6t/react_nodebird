@@ -4,12 +4,15 @@ import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import { Card, Icon, Button, Avatar, Form, Input, List, Comment, Popover } from 'antd';
 import styled from 'styled-components';
+import moment from 'moment';
 
 import PostImages from '../components/PostImages';
 import PostCardContent from '../components/PostCardContent';
 
 import * as postActions from '../reducers/post';
 import * as userActions from '../reducers/user';
+
+moment.locale('ko');
 
 const CardWrapper = styled.div`
   margin-bottom: 20px;
@@ -162,6 +165,7 @@ const PostCard = ({ post }) => {
                 title={post.Retweet.User.nickname}
                 description={<PostCardContent postData={post.Retweet.content} />} // next Link
               />
+              {moment(post.createdAt).format('YYYY.MM.DD')}
             </Card>
           )
           : (
