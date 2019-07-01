@@ -3,16 +3,13 @@ import { Form, Input, Checkbox, Button } from 'antd';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import Router from 'next/router';
+import styled from 'styled-components';
 
 import * as userActions from '../reducers/user';
 
-const TextInput = ({ value }) => (
-  <div>{value}</div>
-);
-
-TextInput.propTypes = {
-  value: PropTypes.string,
-};
+const SignupError = styled.div`
+  color: red;
+`;
 
 // 커스텀 훅
 export const useInput = (initValue = null) => {
@@ -104,12 +101,12 @@ const Signup = () => {
           <label htmlFor="user-password-check">비밀번호 체크</label>
           <br />
           <Input name="user-password-check" type="password" value={passwordCheck} required onChange={onChangePasswordCheck} />
-          {passwordError && <div style={{ color: 'red' }}>비밀번호가 일치하지 않습니다</div>}
+          {passwordError && <SignupError>비밀번호가 일치하지 않습니다</SignupError>}
         </div>
 
         <div>
           <Checkbox name="user-term" value={term} onChange={onChangeTerm}>약관동의</Checkbox>
-          {termError && <div style={{ color: 'red' }}>약관에 동의하셔야 합니다</div>}
+          {termError && <SignupError>약관에 동의하셔야 합니다</SignupError>}
         </div>
 
         <div style={{ marginTop: '1rem' }}>

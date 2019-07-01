@@ -21,7 +21,10 @@ function* login(action) {
     });
   } catch (error) {
     console.error(error);
-    yield put({ type: userActions.LOG_IN_FAILURE });
+    yield put({
+      type: userActions.LOG_IN_FAILURE,
+      reason: error.response && error.response.data,
+    });
   }
 }
 

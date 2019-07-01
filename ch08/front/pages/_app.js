@@ -40,6 +40,8 @@ const NodeBird = ({ Component, store, pageProps }) => (
           name: 'og:description', content: 'NodeBird SNS',
         }, {
           property: 'og:type', content: 'website',
+        }, {
+          property: 'og:image', content: 'http://localhost:3131/favicon.ico',
         }]}
         link={[{
           rel: 'stylesheet', href: 'https://cdnjs.cloudflare.com/ajax/libs/antd/3.19.0/antd.css',
