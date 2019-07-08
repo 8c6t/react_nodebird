@@ -74,6 +74,9 @@ NodeBird.getInitialProps = async (context) => {
   // 서버 측에서 쿠키를 직접 전송. req 같은 정보는 서버 환경에서만 있음
   const cookie = ctx.isServer ? ctx.req.headers.cookie : '';
 
+  // 프론트 서버에 쿠키가 없을 경우 axios 쿠키 초기화
+  axios.defaults.headers.Cookie = '';
+
   // 서버 환경이고 쿠키라면
   if (ctx.isServer && cookie) {
     axios.defaults.headers.cookie = cookie;
